@@ -1,30 +1,52 @@
 # AINav Control Plane
 
-**Company:** AINav, Inc.  
-**Public edge:** [AINav.Institute](https://ainav.institute)  
-**Product:** AINav Control Plane — runtime admission for privileged AI agent actions
+**Company:** AINav, Inc. · **Public edge:** [AINav.Institute](https://ainav.institute) · **Product:** AINav Control Plane
 
-```text
-Agents propose → AINav admits (allow / deny / dual) → SoR effects only after DecisionRecord
-```
-
-## Quick start
-
-| Doc | Purpose |
-|-----|--------|
-| [`docs/NAMING.md`](docs/NAMING.md) | Brand & product hierarchy |
-| [`docs/BUSINESS_MODEL.md`](docs/BUSINESS_MODEL.md) | Canonical commercial model |
-| [`docs/FIRST_OFFER.md`](docs/FIRST_OFFER.md) | L1 pilot offer |
-| [`docs/DUAL_INDEX.md`](docs/DUAL_INDEX.md) | Dual admission |
-| [`docs/CURSOR_SETUP.md`](docs/CURSOR_SETUP.md) | Open this repo in **Cursor** |
-| [`docs/SESSION_FREEZE_2026-08-20.md`](docs/SESSION_FREEZE_2026-08-20.md) | Session freeze |
-
-## Success equation
+Runtime **authority coverage** for privileged AI agent actions — dual human admit, hash-bound Actions, DecisionRecords, fail-closed.
 
 ```text
 SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER
 ```
 
-## License / privacy
+## Open in Cursor
 
-Private repository. Do not publish secrets or customer data.
+1. Install [Cursor](https://cursor.com)
+2. **File → Open Folder** after clone, or Command palette → **Git: Clone**
+3. Clone URL: `https://github.com/AINav01/ainav-control-plane.git`
+4. Project rules load from `.cursor/rules/ainav-doctrine.mdc` and `.cursorrules`
+
+```bash
+git clone https://github.com/AINav01/ainav-control-plane.git
+cd ainav-control-plane
+cursor .
+```
+
+## Verify admit plane (local)
+
+```bash
+cd agent-governance
+bash scripts/run_gap_closure_fixtures.sh
+# Expect: ALL PASS
+```
+
+## Key paths
+
+| Path | Role |
+|------|------|
+| `docs/NAMING.md` | Brand / product hierarchy |
+| `docs/BUSINESS_MODEL.md` | Commercial model |
+| `docs/DUAL_INDEX.md` | Dual admission entry |
+| `docs/PRODUCT_BAR_MAXIMUM.md` | Maximum product bar |
+| `docs/CURSOR_SETUP.md` | Cursor IDE setup |
+| `docs/TARBALL_DOWNLOAD.md` | Offline archive |
+| `agent-governance/` | Admit plane + fixtures |
+| `mothership/www/` | Public pin / site source |
+
+## Doctrine (short)
+
+- **Job C only** — effect authority, not inventory or IdP
+- Dual: SoD roles · `action_hash` · single-use · both-or-neither · named principals
+- Land: FIRST_OFFER L1 $28–40k → attach P-ADM $40–60k/yr
+- No second brand · no fail-open · no fake compliance labels
+
+Private company repository. Lab dual suite is green on single-host atomicity.
