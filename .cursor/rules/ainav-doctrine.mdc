@@ -13,3 +13,4 @@ alwaysApply: true
 - **DNS:** Cloudflare resolves domain; remove Squarespace; point at SWA — see `docs/DNS_PROPAGATION_TROUBLESHOOTING.md`
 - **Commercial:** FIRST_OFFER L1 $28–40k → P-ADM $40–60k/yr; fixtures-first
 - **Success:** LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER
+- **Multi-host admit:** Redis Lua playbook `docs/REDIS_LUA_DUAL_ADMIT.md` · script `scripts/redis/dual_consume.lua` · rule `.cursor/rules/redis-lua-dual-admit.mdc` — claim only after fixtures pass

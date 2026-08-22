@@ -1,0 +1,39 @@
+---
+description: Redis Lua multi-host dual admit — apply when editing admit/Redis/Lua/consume paths
+globs:
+  - "**/redis/**"
+  - "**/*admit*"
+  - "**/*token*"
+  - "**/*.lua"
+  - "**/REDIS_LUA*"
+alwaysApply: false
+---
+
+# Redis Lua dual admit (AINav)
+
+Canonical doc: `docs/REDIS_LUA_DUAL_ADMIT.md` · script: `scripts/redis/dual_consume.lua`
+
+## Non-negotiables
+
+- **Validate-all-then-write-all** — no HSET before every predicate passes
+- **Same-slot keys** — `ainav:req:{request_id}`, `ainav:tok:{request_id}:…`
+- **EVALSHA** + sticky SHA; on `NOSCRIPT` → `SCRIPT LOAD` once + retry once
+- **Business denies** return `{err='…'}`; do not Lua `error()` for already_consumed / hash_mismatch
+- **Hash + PDP in app**; Lua only compares short fields and burns
+- **Fail-closed** — Redis errors / timeouts ≠ admit success; no SoR write without `ok`
+- **Effect after ok** with idempotency key (DecisionRecord path)
+- **Do not claim multi-host dual in product** until fixtures pass on Redis
+
+## Script shape
+
+```text
+KEYS[1]=request, KEYS[2..N]=tokens
+ARGV[1]=expected_hash, ARGV[2]=now
+checks → return err OR burn all → return ok
+```
+
+## Ops
+
+- Profile: `SLOWLOG` + client RTT histogram; target sub-ms script, one RTT
+- Cluster: script cache is per node; load on slot owners
+- Never `SCRIPT FLUSH` on live traffic; never policy-in-Lua; never log token secrets

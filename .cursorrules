@@ -22,7 +22,11 @@
 
 ## Admit plane
 - Dual: named distinct principals, action_hash triple bind, single-use, fail-closed
-- Single-host atomic via AdmitLock; multi-host = Postgres/Redis later — not claimed until wired
+- Single-host atomic via AdmitLock
+- Multi-host Redis Lua: docs/REDIS_LUA_DUAL_ADMIT.md · scripts/redis/dual_consume.lua
+  - validate-all-then-write-all · same-slot {request_id} keys · EVALSHA + NOSCRIPT once
+  - hash/PDP in app · effect after ok with idempotency key
+  - Do not product-claim multi-host until fixtures green
 - Website serves the pin — does not admit
 
 ## Commercial
