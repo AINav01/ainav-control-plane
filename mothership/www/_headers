@@ -1,0 +1,17 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/health.json
+  Cache-Control: no-store, max-age=0
+  Content-Type: application/json
+
+/health-gov.json
+  Cache-Control: no-store, max-age=0
+  Content-Type: application/json
+
+/status.json
+  Cache-Control: no-store, max-age=0
+  Content-Type: application/json
