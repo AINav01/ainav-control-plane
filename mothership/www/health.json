@@ -1,0 +1,23 @@
+{
+  "service": "ainav-institute",
+  "release_id": "agent-gov-1.9.0",
+  "policy_digest": "sha256:5b513af707f7f1725f0f1546f3c388e22e7a77f8d1d3cc99abcadf18e1a107bd",
+  "latest_tar_sha256": "sha256:445ef03dd817b31895e8e6338270e1cdc97cff372de13a2ba107e4207efb686e",
+  "agent_governance": {
+    "release_id": "agent-gov-1.9.0",
+    "policy_digest": "sha256:5b513af707f7f1725f0f1546f3c388e22e7a77f8d1d3cc99abcadf18e1a107bd"
+  },
+  "lattice_cost": {
+    "release_id": "lattice-cost-4.1.0"
+  },
+  "products": {
+    "agent_governance": "agent-gov-1.9.0",
+    "lattice_cost": "lattice-cost-4.1.0"
+  },
+  "integrations": [
+    "dynamics365_sales",
+    "business_central"
+  ],
+  "ts": "2026-07-30T17:16:06Z",
+  "channel": "cloud"
+}
