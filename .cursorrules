@@ -1,43 +1,34 @@
 # AINav Control Plane — Cursor project rules
-# Company: AINav, Inc. | Public edge: AINav.Institute | Product: AINav Control Plane
 
 ## Identity
-- Legal entity: **AINav, Inc.**
-- Public edge / pin: **AINav.Institute**
-- Product name: **AINav Control Plane** (shorthand: AINav)
-- Do NOT introduce a second brand (no Aether SKUs, no "Institute product")
+- Company: AINav, Inc.
+- Public edge: AINav.Institute
+- Product: AINav Control Plane
+- Job C only: effect authority (dual admit + DecisionRecords) before privileged SoR writes
+- Not Job A inventory; not Job B IdP replacement; complement Agent 365 / Okta / Zenity
 
-## Job (only)
-- **Job C — Effect authority:** May this privileged agent *write* run under dual human admit, with DecisionRecords, before the SoR moves?
-- Not Job A (agent inventory / shadow-AI / AISPM)
-- Not Job B (IdP / Agent 365 / Okta replacement)
-- Complement identity and agent security; do not claim to replace them
+## Naming
+- Never lead with Aether as a product brand
+- SOW / contracts: AINav, Inc.
+- Pin / verify: AINav.Institute
 
-## Dual admission (non-negotiable)
-- Required SoD roles → single-use tokens bound to request_id + action_hash
-- Triple hash: token.action_hash == request.action_hash == hash(Action at execute)
-- Atomic both-or-neither consume; execute-only burn
-- Named principals; distinct humans (no self-approve)
-- Fail-closed: partial dual, expiry, revoke, store down, hash mutation → no effect
-- Lab single-host atomicity is proven; multi-host HA needs Redis/SQL plane (do not claim HA until wired)
+## Pin edge (Azure)
+- Deploy static tree: mothership/www → Azure Static Web Apps
+- Script: mothership/azure/deploy-swa.sh
+- CI: .github/workflows/azure-static-web-apps.yml (secret AZURE_STATIC_WEB_APPS_API_TOKEN)
+- LIVE_PIN_OK: https://ainav.institute/health.json is JSON with policy_digest (not Squarespace HTML)
+- DNS: Cloudflare already resolves the domain; remove Squarespace targets; point at SWA per Azure custom-domain instructions
+- See docs/DNS_PROPAGATION_TROUBLESHOOTING.md and docs/DO_THESE_NOW.md
+
+## Admit plane
+- Dual: named distinct principals, action_hash triple bind, single-use, fail-closed
+- Single-host atomic via AdmitLock; multi-host = Postgres/Redis later — not claimed until wired
+- Website serves the pin — does not admit
 
 ## Commercial
-- Land only via FIRST_OFFER L1: $28k / $35k / $40k (band $25–40k)
-- Primary attach: P-ADM $40–60k/yr
-- U-DUAL never free with connectors
-- Fixtures before live SoR; no fail-open discounts
-- L1 ≠ ARR
-
-## Code / docs priorities
-- Prefer agent-governance/agent_gov for admit plane
-- Prefer docs/NAMING.md, docs/BUSINESS_MODEL.md, docs/DUAL_INDEX.md, docs/PRODUCT_BAR_MAXIMUM.md
-- Public site source: mothership/www/ (pin/verify culture)
-- Run: `cd agent-governance && bash scripts/run_gap_closure_fixtures.sh`
-
-## Language
-- Prefer: authority coverage, dual admission, DecisionRecord, fail-closed, hash-bound
-- Avoid: gold standard / state of the art / cutting edge unless earned by pin + signed L1
-- Never: GENIUS/AI Act "certified" product labels
+- Land: FIRST_OFFER L1 $28/35/40k fixtures-first
+- Attach: P-ADM $40–60k/yr within ~90 days of green L1
+- No fail-open discounts; no inventory SKUs
 
 ## Success equation
-LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER
+SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER
