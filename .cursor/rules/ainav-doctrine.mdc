@@ -1,32 +1,15 @@
 ---
-description: AINav Control Plane doctrine for Cursor
-globs:
-  - "**/*"
+description: AINav Control Plane doctrine — always apply
 alwaysApply: true
 ---
 
-# AINav Control Plane
+# AINav doctrine
 
-**Company:** AINav, Inc. · **Edge:** AINav.Institute · **Product:** AINav Control Plane
-
-## Job C only
-Admit privileged agent **writes** (dual human admit + DecisionRecords). Not inventory (Job A). Not IdP (Job B).
-
-## Dual admission (non-negotiable)
-- SoD roles → single-use tokens · request_id + action_hash
-- Triple hash at execute · both-or-neither consume · named distinct principals
-- Fail-closed · no self-approve · no fail-open for demos
-
-## Commercial
-FIRST_OFFER L1 $28–40k → P-ADM $40–60k/yr · fixtures before live SoR · L1 ≠ ARR
-
-## Paths
-- Admit plane: `agent-governance/agent_gov/`
-- Docs: `docs/NAMING.md`, `docs/BUSINESS_MODEL.md`, `docs/DUAL_INDEX.md`, `docs/PRODUCT_BAR_MAXIMUM.md`
-- Site source: `mothership/www/`
-- Fixtures: `cd agent-governance && bash scripts/run_gap_closure_fixtures.sh`
-
-## Success
-`LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER`
-
-Never invent GENIUS/AI Act certification labels. Never reintroduce Aether as a second brand.
+- **Company:** AINav, Inc. · **Edge:** AINav.Institute · **Product:** AINav Control Plane
+- **Job C only:** dual human admit + DecisionRecords before privileged SoR writes
+- **Not:** agent inventory (Job A), IdP replacement (Job B), Aether brand, fail-open demos
+- **Pin:** Azure Static Web Apps (`mothership/www`); LIVE_PIN_OK = `/health.json` is JSON with `policy_digest`
+- **Deploy:** `bash mothership/azure/deploy-swa.sh` after `az login`
+- **DNS:** Cloudflare resolves domain; remove Squarespace; point at SWA — see `docs/DNS_PROPAGATION_TROUBLESHOOTING.md`
+- **Commercial:** FIRST_OFFER L1 $28–40k → P-ADM $40–60k/yr; fixtures-first
+- **Success:** LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER

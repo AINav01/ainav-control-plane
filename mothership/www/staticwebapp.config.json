@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json.schemastore.org/staticwebapp.config.json",
+  "routes": [
+    {
+      "route": "/health.json",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      }
+    },
+    {
+      "route": "/health-gov.json",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      }
+    },
+    {
+      "route": "/status.json",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      }
+    },
+    {
+      "route": "/*.html",
+      "headers": {
+        "Cache-Control": "public, max-age=60, must-revalidate",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY"
+      }
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/health.json", "/health-gov.json", "/status.json", "/*.json", "/*.html", "/*.css", "/*.js", "/*.png", "/*.ico"]
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Frame-Options": "DENY"
+  },
+  "mimeTypes": {
+    ".json": "application/json"
+  }
+}

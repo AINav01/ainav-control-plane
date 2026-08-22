@@ -1,0 +1,6 @@
+{
+  "service": "ainav-institute",
+  "status": "pin_edge",
+  "channel": "azure-static-web-apps",
+  "notes": "Website serves the pin — does not admit. Dual admission is the control plane, not this static edge."
+}
