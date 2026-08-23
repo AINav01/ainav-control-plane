@@ -1,41 +1,31 @@
 # Open this project in Cursor
 
-## 1. From GitHub (recommended)
-
-1. Install [Cursor](https://cursor.com)
-2. **File → Clone Repository** (or terminal):
-
 ```bash
 git clone https://github.com/AINav01/ainav-control-plane.git
-cd ainav-control-plane
-git pull
+cd ainav-control-plane && git pull
 ```
 
-3. **File → Open Folder** → select `ainav-control-plane`
-4. Cursor loads **`.cursorrules`** (Job C, dual admit, U-DUAL Redis, commercial ops, model cutover)
+**File → Open Folder** → loads `.cursorrules`.
 
-## 2. After open
-
-| Do | Path / command |
-|----|----------------|
+| Do | Path |
+|----|------|
 | Best-of spine | `docs/BEST_OF_INTEGRATED.md` |
+| Prototype build | `docs/PROTOTYPE_BUILD_2026-08-23.md` |
+| Deep review (Grok 4.6) | `docs/PROTOTYPE_REVIEW_GROK46.md` |
 | Gold gate | `make gold` |
-| Dual index | `docs/DUAL_INDEX.md` |
 | Gap register | `docs/GAP_CLOSURE_REGISTER.md` |
 | Model cutover | `docs/MODEL_CUTOVER.md` |
-| P-ADM attach script | `docs/P_ADM_ATTACH_SCRIPT.md` |
-| Commercial ops three | `docs/COMMERCIAL_OPS_THREE.md` |
+| P-ADM attach | `docs/P_ADM_ATTACH_SCRIPT.md` |
 | U-DUAL Redis | `docs/U_DUAL_REDIS_ATOMIC.md` |
-| Pin ops | `docs/DO_THESE_NOW.md` |
 
-## 3. Chat starter
+## Chat starter — deep review
 
 ```text
-This is AINav Control Plane (AINav, Inc. / AINav.Institute).
-Follow .cursorrules. Job C only. Dual admission fail-closed.
-Best-of: docs/BEST_OF_INTEGRATED.md · make gold
-Model change: docs/MODEL_CUTOVER.md
-Next focus: [LIVE_PIN_OK | FIRST_OFFER | P-ADM attach | U-DUAL Redis | …]
+You are reviewing AINav Control Plane prototype build 2026-08-23.
+Follow .cursorrules and docs/PROTOTYPE_REVIEW_GROK46.md.
+Run make gold and examples/gold_path.py before conclusions.
+Job C only. Dual fail-closed. Do not invent SKUs or claim LIVE_PIN_OK/HA without evidence.
+Deliver the review in the output format in PROTOTYPE_REVIEW_GROK46.md.
 ```
 
 **Repo:** https://github.com/AINav01/ainav-control-plane

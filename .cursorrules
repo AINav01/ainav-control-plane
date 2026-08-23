@@ -1,65 +1,39 @@
 # AINav Control Plane — Cursor project rules
 
 ## Identity
-- Company: AINav, Inc.
-- Public edge: AINav.Institute
-- Product: AINav Control Plane
+- Company: AINav, Inc. · Edge: AINav.Institute · Product: AINav Control Plane
 - Job C only: effect authority (dual admit + DecisionRecords) before privileged SoR writes
-- Not Job A inventory; not Job B IdP replacement; complement Agent 365 / Okta / Zenity
+- Not Job A inventory; not Job B IdP replacement
 
 ## Naming
-- Never lead with Aether as a product brand
-- SOW / contracts: AINav, Inc.
-- Pin / verify: AINav.Institute
+- Never lead with Aether as a product brand · SOW: AINav, Inc. · Pin: AINav.Institute
 
 ## Pin edge (Azure)
-- Deploy static tree: mothership/www → Azure Static Web Apps
-- Script: mothership/azure/deploy-swa.sh
-- CI: .github/workflows/azure-static-web-apps.yml (secret AZURE_STATIC_WEB_APPS_API_TOKEN)
-- LIVE_PIN_OK: https://ainav.institute/health.json is JSON with policy_digest (not Squarespace HTML)
-- DNS: Cloudflare already resolves the domain; remove Squarespace targets; point at SWA per Azure custom-domain instructions
-- See docs/DNS_PROPAGATION_TROUBLESHOOTING.md and docs/DO_THESE_NOW.md
+- mothership/www → Azure SWA · LIVE_PIN_OK = health.json with policy_digest (not Squarespace HTML)
+- See docs/DO_THESE_NOW.md
 
 ## Admit plane
-- Dual: named distinct principals, action_hash triple bind, single-use, fail-closed
-- Single-host atomic via AdmitLock (lab fixtures)
-- Multi-host: agent_gov.redis_consume.RedisDualConsume + scripts/redis/dual_consume.lua
-- Claim HA only after Redis fixtures green
-- Gold spine: docs/GOLD_STANDARD.md · docs/BEST_OF_INTEGRATED.md · scripts/check_gold_standard.py · make gold
-- Website serves the pin — does not admit
-- One-shot path: DualSession.run_and_apply / AdmitClient.admit_and_apply
-- Offline dual predicates: agent_gov.lua_simulator
+- Dual: distinct principals, action_hash, single-use, fail-closed
+- Lab: AdmitLock · Multi-host: RedisDualConsume + dual_consume.lua (HA only after fixtures green)
+- Gold: docs/BEST_OF_INTEGRATED.md · docs/GOLD_STANDARD.md · make gold
+- run_and_apply / admit_and_apply · lua_simulator offline
 
 ## U-DUAL + Redis
-- Pack: U-DUAL $20–35k/yr — never free with P-ADM or U-SOR
-- Atomic burn: docs/U_DUAL_REDIS_ATOMIC.md
-- Keys: ainav:req:{request_id}, ainav:tok:{request_id}:{token_id}
-- Script: validate-all-then-write-all; {ok}|{err}; NOSCRIPT → LOAD once
-- Cursor rule: .cursor/rules/redis-lua-dual-admit.mdc
+- U-DUAL $20–35k/yr — never free with P-ADM or U-SOR
+- docs/U_DUAL_REDIS_ATOMIC.md · validate-all-then-write-all · {request_id} tags
 
 ## Commercial
-- Land: FIRST_OFFER L1 $28/35/40k fixtures-first
-- Attach: P-ADM $40–60k/yr within ~90 days of green L1
-- Script: docs/P_ADM_ATTACH_SCRIPT.md · playbook: docs/P_ADM_ATTACH_PLAYBOOK.md
+- L1 $28/35/40k → P-ADM $40–60k/yr ≤90d · docs/P_ADM_ATTACH_SCRIPT.md
 - Ops three: docs/COMMERCIAL_OPS_THREE.md
-  - Availability/ACL: docs/COMMERCIAL_AVAILABILITY_AND_ENTITLEMENT.md
-  - Sales/purchase: docs/SALES_PURCHASE_PROCESS.md
-  - Implementation/upsells: docs/IMPLEMENTATION_AND_UPSELL_INTEGRATION.md
 - No fail-open discounts; no inventory SKUs; no free U-DUAL
 
-## Success equation
-SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
-
-## Azure pin edge (ops)
-- Health: /healthz.json (probe) + /health.json (LIVE_PIN_OK digest)
-- Check: python3 scripts/check_azure_swa_health.py --local|--public --require-live
-- Catalog: mothership/azure/README.md
-- FD probe 30s on /healthz.json; alerts on OriginHealthPercentage + OriginLatency
-- LAW: configure-log-analytics-diagnostics.sh; KQL summary/fast only by default
-- Cursor rule: .cursor/rules/azure-pin-edge.mdc
+## Success
+SUCCESS = LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
 
 ## Model cutover
-- On Grok version change: docs/MODEL_CUTOVER.md — re-run make gold; do not soften dual/SKUs
+- docs/MODEL_CUTOVER.md — re-run make gold; do not soften dual/SKUs
 - Repo truth > chat memory
 
-# Must-have offering: docs/MUST_HAVE_OFFERING.md · docs/OFFERING.md · L1 then P-ADM only
+## Prototype (2026-08-23)
+- docs/PROTOTYPE_BUILD_2026-08-23.md · docs/PROTOTYPE_REVIEW_GROK46.md
+- For Grok 4.6 deep review in Cursor: follow PROTOTYPE_REVIEW_GROK46.md
