@@ -58,4 +58,8 @@ SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
 - LAW: configure-log-analytics-diagnostics.sh; KQL summary/fast only by default
 - Cursor rule: .cursor/rules/azure-pin-edge.mdc
 
+## Model cutover
+- On Grok version change: docs/MODEL_CUTOVER.md — re-run make gold; do not soften dual/SKUs
+- Repo truth > chat memory
+
 # Must-have offering: docs/MUST_HAVE_OFFERING.md · docs/OFFERING.md · L1 then P-ADM only

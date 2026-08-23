@@ -1,8 +1,8 @@
 # Gap closure register — AINav
 
-**As of:** 2026-08-23 (pass 4 — best-of integrate + Redis adapter + commercial ops)  
+**As of:** 2026-08-23 (pass 5 — repo-complete + model cutover protect)  
 **Bar:** [`PRODUCT_BAR_MAXIMUM.md`](PRODUCT_BAR_MAXIMUM.md) · [`BEST_OF_INTEGRATED.md`](BEST_OF_INTEGRATED.md)  
-**Purpose:** Track every gap. Close in-repo items; name external blockers without fake-closing them.
+**Purpose:** Close every **in-repo** gap. Name external blockers without fake-closing them.
 
 ```text
 SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
@@ -14,30 +14,44 @@ SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
 
 | ID | Gap | Status | Evidence / action |
 |----|-----|--------|-------------------|
-| **G1** | Public **LIVE_PIN_OK** | **OPEN (ops)** | Site source ready (`mothership/www`). Deploy Azure SWA + DNS off Squarespace. |
-| **G2** | Atomic dual consume (single-host) | **CLOSED+** | `AdmitLock` + fixtures green. |
-| **G3** | Atomic dual consume (multi-host HA) | **ENGINEERING READY** | `dual_consume.lua` + `RedisDualConsume` + `redis_errors` + lua_simulator. **Product HA claim only after Redis fixtures green.** `U_DUAL_REDIS_ATOMIC.md`. |
-| **G4** | Fixture battery CI | **CLOSED** | `run_gap_closure_fixtures.sh` + `check_gold_standard.py` / `make gold`. |
-| **G5** | DecisionRecord Acceptance Kit | **CLOSED** | Pilot exit = non-author reconstruct. |
+| **G1** | Public **LIVE_PIN_OK** | **OPEN (ops)** | Source ready (`mothership/www`). Needs Azure SWA deploy + DNS off Squarespace. |
+| **G2** | Atomic dual consume (single-host) | **CLOSED+** | `AdmitLock` + fixture matrix green. |
+| **G3** | Atomic dual consume (multi-host) | **ENGINEERING READY** | `dual_consume.lua` + `RedisDualConsume` + simulator. **HA claim only after Redis fixtures green.** |
+| **G4** | Fixture battery / gold gate | **CLOSED** | `make gold` · `check_gold_standard.py`. |
+| **G5** | DecisionRecord Acceptance Kit | **CLOSED** | Pilot exit = reconstruct. |
 | **G6** | Dual Control Pack + failure matrix | **CLOSED** | Pack + matrix + `DUAL_INDEX.md`. |
 | **G7** | RFP Job C evaluation criteria | **CLOSED** | Soft HITL fails. |
 | **G8** | Mothership metadata policy | **CLOSED** | |
 | **G9** | Institute product pages (source) | **CLOSED (source)** | `mothership/www/`. |
-| **G10** | Public edge = source | **OPEN (ops)** | Cutover so buyers do not hit construction-only. |
-| **G11** | Language discipline | **CLOSED (guidance)** | |
+| **G10** | Public edge = source | **OPEN (ops)** | Same cutover as G1. |
+| **G11** | Language discipline | **CLOSED** | Guidance in rules + business model. |
 | **G12** | Delaware entity + bank | **OPEN (legal)** | Not a repo task. |
 | **G13** | Signed L1 / first revenue | **OPEN (commercial)** | FIRST_OFFER motion. |
-| **G14** | Commercial unlock / live SoR claims | **OPEN (gated)** | Pin + proof day. |
-| **G15** | Commercial ops three | **CLOSED (artifact)** | `COMMERCIAL_OPS_THREE.md` + availability/sales/impl + `P_ADM_ATTACH_SCRIPT.md`. |
-| **G16** | Best-of spine + Cursor rules | **CLOSED (artifact)** | `BEST_OF_INTEGRATED.md` · `.cursorrules` · `CURSOR.md` · `make gold`. |
-| **G17** | GitHub ↔ local sync of best-of | **CLOSED (this commit)** | Commercial detail + Cursor + gap register on `main`. |
+| **G14** | Live SoR unlock claims | **OPEN (gated)** | Requires pin + proof day. |
+| **G15** | Commercial ops three + attach script | **CLOSED** | Ops three + `P_ADM_ATTACH_SCRIPT.md` on `main`. |
+| **G16** | Best-of spine + Cursor rules | **CLOSED** | `BEST_OF_INTEGRATED.md` · `.cursorrules` · `CURSOR.md`. |
+| **G17** | GitHub ↔ local best-of sync | **CLOSED** | Gap-fill commit on `main`. |
+| **G18** | Model cutover protect (→ 4.6) | **CLOSED** | `docs/MODEL_CUTOVER.md` + Cursor pointer. |
 
 ---
 
-## Tiers
+## Completion tiers
 
-| Tier | Meaning |
-|------|--------|
-| **Repo-complete** | G2–G9, G11, G15–G17 closed |
-| **Ops-complete** | + G1, G10 (LIVE_PIN_OK) |
-| **Company-complete** | + G12, G13, G14 |
+| Tier | Status | Meaning |
+|------|--------|--------|
+| **Repo-complete** | **YES** | G2–G9, G11, G15–G18 closed or engineering-ready as documented |
+| **Ops-complete** | **NO** | Needs G1 + G10 |
+| **Company-complete** | **NO** | Needs G12 + G13 (+ G14 gated) |
+
+---
+
+## Do not claim
+
+```text
+✗ LIVE_PIN_OK without health.json proof
+✗ Multi-host HA dual without Redis fixtures green
+✗ Market-proven / first revenue without signed L1
+✗ Live SoR authority without commercial unlock
+```
+
+**Related:** `MODEL_CUTOVER.md` · `BEST_OF_INTEGRATED.md` · `GOLD_STANDARD.md`
