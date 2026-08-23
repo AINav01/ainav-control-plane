@@ -1,7 +1,7 @@
 # Gap closure register — AINav
 
-**As of:** 2026-08-23 (pass 5 — repo-complete + model cutover protect)  
-**Bar:** [`PRODUCT_BAR_MAXIMUM.md`](PRODUCT_BAR_MAXIMUM.md) · [`BEST_OF_INTEGRATED.md`](BEST_OF_INTEGRATED.md)  
+**As of:** 2026-08-23 (pass 6 — **REPO-COMPLETE**; external gates remain OPEN)  
+**Bar:** [`PRODUCT_BAR_MAXIMUM.md`](PRODUCT_BAR_MAXIMUM.md) · [`COMPLETION_STATUS.md`](COMPLETION_STATUS.md)  
 **Purpose:** Close every **in-repo** gap. Name external blockers without fake-closing them.
 
 ```text
@@ -24,14 +24,15 @@ SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
 | **G8** | Mothership metadata policy | **CLOSED** | |
 | **G9** | Institute product pages (source) | **CLOSED (source)** | `mothership/www/`. |
 | **G10** | Public edge = source | **OPEN (ops)** | Same cutover as G1. |
-| **G11** | Language discipline | **CLOSED** | Guidance in rules + business model. |
+| **G11** | Language discipline | **CLOSED** | |
 | **G12** | Delaware entity + bank | **OPEN (legal)** | Not a repo task. |
 | **G13** | Signed L1 / first revenue | **OPEN (commercial)** | FIRST_OFFER motion. |
 | **G14** | Live SoR unlock claims | **OPEN (gated)** | Requires pin + proof day. |
-| **G15** | Commercial ops three + attach script | **CLOSED** | Ops three + `P_ADM_ATTACH_SCRIPT.md` on `main`. |
-| **G16** | Best-of spine + Cursor rules | **CLOSED** | `BEST_OF_INTEGRATED.md` · `.cursorrules` · `CURSOR.md`. |
-| **G17** | GitHub ↔ local best-of sync | **CLOSED** | Gap-fill commit on `main`. |
-| **G18** | Model cutover protect (→ 4.6) | **CLOSED** | `docs/MODEL_CUTOVER.md` + Cursor pointer. |
+| **G15** | Commercial ops three + attach script | **CLOSED** | On `main`. |
+| **G16** | Best-of spine + Cursor rules | **CLOSED** | |
+| **G17** | GitHub ↔ local best-of sync | **CLOSED** | |
+| **G18** | Model cutover protect (→ 4.6) | **CLOSED** | `MODEL_CUTOVER.md`. |
+| **G19** | Prototype build + 4.6 review brief | **CLOSED** | `PROTOTYPE_BUILD_2026-08-23.md` · `PROTOTYPE_REVIEW_GROK46.md` · `COMPLETION_STATUS.md`. |
 
 ---
 
@@ -39,7 +40,7 @@ SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
 
 | Tier | Status | Meaning |
 |------|--------|--------|
-| **Repo-complete** | **YES** | G2–G9, G11, G15–G18 closed or engineering-ready as documented |
+| **Repo-complete** | **YES** | G2–G9, G11, G15–G19 closed; G3 engineering-ready (not prod HA) |
 | **Ops-complete** | **NO** | Needs G1 + G10 |
 | **Company-complete** | **NO** | Needs G12 + G13 (+ G14 gated) |
 
@@ -54,4 +55,4 @@ SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
 ✗ Live SoR authority without commercial unlock
 ```
 
-**Related:** `MODEL_CUTOVER.md` · `BEST_OF_INTEGRATED.md` · `GOLD_STANDARD.md`
+**See also:** [`COMPLETION_STATUS.md`](COMPLETION_STATUS.md)
