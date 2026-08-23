@@ -1,31 +1,34 @@
-# Open this project in Cursor
+# Open AINav Control Plane in Cursor
+
+**Master (stay on track):** `docs/MASTER_AS_OF_2026-08-23.md`  
+**As of:** 2026-08-23 19:52 EDT · **Repo-complete** · pin/L1 still OPEN
 
 ```bash
 git clone https://github.com/AINav01/ainav-control-plane.git
 cd ainav-control-plane && git pull
+make gold
 ```
 
 **File → Open Folder** → loads `.cursorrules`.
 
-| Do | Path |
-|----|------|
-| Best-of spine | `docs/BEST_OF_INTEGRATED.md` |
-| Prototype build | `docs/PROTOTYPE_BUILD_2026-08-23.md` |
-| Deep review (Grok 4.6) | `docs/PROTOTYPE_REVIEW_GROK46.md` |
-| Gold gate | `make gold` |
-| Gap register | `docs/GAP_CLOSURE_REGISTER.md` |
-| Model cutover | `docs/MODEL_CUTOVER.md` |
-| P-ADM attach | `docs/P_ADM_ATTACH_SCRIPT.md` |
-| U-DUAL Redis | `docs/U_DUAL_REDIS_ATOMIC.md` |
-
-## Chat starter — deep review
+## Chat starter
 
 ```text
-You are reviewing AINav Control Plane prototype build 2026-08-23.
-Follow .cursorrules and docs/PROTOTYPE_REVIEW_GROK46.md.
-Run make gold and examples/gold_path.py before conclusions.
-Job C only. Dual fail-closed. Do not invent SKUs or claim LIVE_PIN_OK/HA without evidence.
-Deliver the review in the output format in PROTOTYPE_REVIEW_GROK46.md.
+Follow .cursorrules and docs/MASTER_AS_OF_2026-08-23.md.
+Job C only. Dual fail-closed. Repo truth > chat memory.
+Do not invent SKUs or claim LIVE_PIN_OK / HA without evidence.
+Next priorities: pin live OR signed L1 — not more doctrine.
 ```
+
+## Key paths
+
+| Topic | Doc |
+|-------|-----|
+| Master status | `docs/MASTER_AS_OF_2026-08-23.md` |
+| Gold / prototype | `make gold` · `docs/PROTOTYPE_BUILD_2026-08-23.md` |
+| P-ADM attach | `docs/P_ADM_ATTACH_SCRIPT.md` |
+| Redis HA / H9 | `docs/REDIS_HA_FIXTURES.md` · `tests/test_redis_ha_h9_concurrent.py` |
+| Gaps | `docs/GAP_CLOSURE_REGISTER.md` |
+| Completion | `docs/COMPLETION_STATUS.md` |
 
 **Repo:** https://github.com/AINav01/ainav-control-plane

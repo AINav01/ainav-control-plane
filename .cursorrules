@@ -1,40 +1,35 @@
-# AINav Control Plane — Cursor project rules
+# AINav Control Plane — Cursor rules
+# Master: docs/MASTER_AS_OF_2026-08-23.md (2026-08-23 19:52 EDT)
 
 ## Identity
-- Company: AINav, Inc. · Edge: AINav.Institute · Product: AINav Control Plane
-- Job C only: effect authority (dual admit + DecisionRecords) before privileged SoR writes
-- Not Job A inventory; not Job B IdP replacement
+- AINav, Inc. · Edge AINav.Institute · Product: Control Plane
+- Job C only: dual-admitted effect authority before privileged SoR writes
+- Not inventory (Job A) · not IdP replacement (Job B)
 
-## Naming
-- Never lead with Aether as a product brand · SOW: AINav, Inc. · Pin: AINav.Institute
-
-## Pin edge (Azure)
-- mothership/www → Azure SWA · LIVE_PIN_OK = health.json with policy_digest (not Squarespace HTML)
-- See docs/DO_THESE_NOW.md
-
-## Admit plane
+## Non-negotiables
 - Dual: distinct principals, action_hash, single-use, fail-closed
-- Lab: AdmitLock · Multi-host: RedisDualConsume + dual_consume.lua (HA only after fixtures green)
-- Gold: docs/BEST_OF_INTEGRATED.md · docs/GOLD_STANDARD.md · make gold
-- run_and_apply / admit_and_apply · lua_simulator offline
+- SoR only after admit ok · DecisionRecord for proof
+- L1 prove → P-ADM cover → packs deepen
+- U-DUAL never free with P-ADM or U-SOR
+- No soft HITL as dual · no fail-open Redis
+- Repo truth > chat memory · no invented SKUs
 
-## U-DUAL + Redis
-- U-DUAL $20–35k/yr — never free with P-ADM or U-SOR
-- docs/U_DUAL_REDIS_ATOMIC.md · validate-all-then-write-all · {request_id} tags
+## Build
+- Lab: AdmitLock · gold_path · make gold PASS
+- Multi-host: RedisDualConsume + dual_consume.lua
+- HA claim only after REDIS_HA_FIXTURES (H1–H12) green
+- H9: tests/test_redis_ha_h9_concurrent.py (live needs REDIS_URL)
 
-## Commercial
-- L1 $28/35/40k → P-ADM $40–60k/yr ≤90d · docs/P_ADM_ATTACH_SCRIPT.md
-- Ops three: docs/COMMERCIAL_OPS_THREE.md
-- No fail-open discounts; no inventory SKUs; no free U-DUAL
+## Commercial bands
+- L1 $28–40k · P-ADM $40–60k/yr · U-DUAL $20–35k/yr
+- Attach: docs/P_ADM_ATTACH_SCRIPT.md
 
 ## Success
-SUCCESS = LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
+LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
 
-## Model cutover
-- docs/MODEL_CUTOVER.md — re-run make gold; do not soften dual/SKUs
-- Repo truth > chat memory
+## OPEN (do not fake-close)
+- G1/G10 pin · G12 legal · G13 signed L1 · G14 live SoR
 
-## Prototype (2026-08-23)
-- docs/PROTOTYPE_BUILD_2026-08-23.md · docs/PROTOTYPE_REVIEW_GROK46.md
-- Completion hand-off: docs/COMPLETION_STATUS.md (repo-complete; pin/L1 still OPEN)
-- For Grok 4.6 deep review in Cursor: follow PROTOTYPE_REVIEW_GROK46.md
+## Stay on track
+Read docs/MASTER_AS_OF_2026-08-23.md first.
+Next work: pin cutover OR L1 outreach — not more doctrine essays.

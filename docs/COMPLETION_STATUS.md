@@ -1,6 +1,9 @@
 # Completion status — AINav Control Plane
 
-**As of:** 2026-08-23  
+**As of:** 2026-08-23 19:52 EDT
+
+**Master spine:** [`MASTER_AS_OF_2026-08-23.md`](MASTER_AS_OF_2026-08-23.md)
+
 **Verdict:** **REPO-COMPLETE** · **OPS/COMPANY NOT COMPLETE**
 
 ```text
@@ -8,57 +11,26 @@ In-repo product, prototype, commercial docs, Cursor, GitHub  →  DONE
 LIVE_PIN_OK · signed L1 · legal entity · live SoR unlock     →  OWNER ACTIONS
 ```
 
----
+## Closed in repo
 
-## Closed in this build (repo)
+Dual lab path · Redis dual engineering · H9 offline concurrent · gold gate (includes H9) · commercial ops · P-ADM attach · prototype + 4.6 review · model cutover · Cursor rules · master spine
 
-| Area | Evidence |
-|------|----------|
-| Dual admit lab path | `make gold` · `gold_path.py` · AdmitLock fixtures |
-| Redis dual engineering | `dual_consume.lua` · `RedisDualConsume` · lua_simulator |
-| Gold gate | `scripts/check_gold_standard.py` |
-| Commercial ops + attach | Ops three · `P_ADM_ATTACH_SCRIPT.md` |
-| Prototype pack | `PROTOTYPE_BUILD_2026-08-23.md` |
-| Grok 4.6 review brief | `PROTOTYPE_REVIEW_GROK46.md` |
-| Model cutover protect | `MODEL_CUTOVER.md` |
-| Cursor doctrine | `.cursorrules` · `CURSOR.md` |
-| GitHub sync | `main` on AINav01/ainav-control-plane |
+**Gate:** `make gold` → ALL PASS
 
-**Gate:** `make gold` → GOLD STANDARD: ALL PASS
+## Still OPEN
 
----
-
-## Cannot close from the repo (honest OPEN)
-
-| ID | Gap | Owner action |
-|----|-----|----------------|
-| G1 / G10 | LIVE_PIN_OK / public edge | Azure SWA deploy + DNS; see `DO_THESE_NOW.md` |
-| G12 | Entity + bank | Legal / formation |
-| G13 | Signed L1 | FIRST_OFFER outreach + signature |
-| G14 | Live SoR unlock | After pin + proof day |
-| G3* | Product HA claim | Live Redis fixture matrix green (*engineering is ready) |
-
----
-
-## Definition of “complete”
-
-| Tier | Status |
-|------|--------|
-| **Repo-complete** | **YES** |
-| **Ops-complete** | NO until G1/G10 |
-| **Company-complete** | NO until G12 + G13 |
-
-Do **not** market ops/company complete until those gates pass.
-
----
+| ID | Owner action |
+|----|----------------|
+| G1/G10 LIVE_PIN_OK | Azure SWA + DNS |
+| G12 entity/bank | Legal |
+| G13 signed L1 | FIRST_OFFER |
+| G14 live SoR | After pin + proof |
+| G3 product HA | Live REDIS_URL matrix H1–H12 |
 
 ## Hand-off
 
 ```bash
-git pull
-make gold
-# Cursor: Open Folder · follow .cursorrules
-# Next: pin cutover OR L1 outreach — not more doctrine
+git pull && make gold
+# Cursor: Open Folder · docs/MASTER_AS_OF_2026-08-23.md
+# Next: pin cutover OR L1 outreach
 ```
-
-**Related:** `GAP_CLOSURE_REGISTER.md` · `BEST_OF_INTEGRATED.md` · `PROTOTYPE_BUILD_2026-08-23.md`
