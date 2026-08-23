@@ -1,0 +1,15 @@
+[project]
+name = "agent-gov"
+version = "1.0.0"
+description = "AINav-shaped admission control dry-run (fixtures only)"
+requires-python = ">=3.10"
+dependencies = ["pyyaml", "cryptography"]
+
+[project.scripts]
+agent-gov-check = "scripts.check_all:main"
+
+[tool.setuptools.packages.find]
+include = ["agent_gov*"]
+
+[tool.pytest.ini_options]
+markers = ["redis_ha: live Redis HA fixtures (needs REDIS_URL)"]
