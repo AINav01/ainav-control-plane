@@ -5,7 +5,8 @@
 
 | Priority | Doc | Use when |
 |----------|-----|----------|
-| **0** | **`GOLD_STANDARD.md`** | **Deep review + integrated business/tech spine** |
+| **0** | **`BEST_OF_INTEGRATED.md`** · **`GOLD_STANDARD.md`** | **Best-of spine + gold gate** |
+| **0b** | **`U_DUAL_REDIS_ATOMIC.md`** | **U-DUAL multi-host Redis burn** |
 | **1** | `AINav_Dual_Admission_Canonical_v1.md` | Default doctrine + lifecycle |
 | **2** | `AINav_Dual_Control_Pack.md` | Demo script + SOW paste |
 | **3** | `AINav_Dual_Failure_Matrix.md` | Fail-closed outcomes |

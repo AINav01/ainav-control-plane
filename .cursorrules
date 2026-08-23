@@ -22,17 +22,40 @@
 
 ## Admit plane
 - Dual: named distinct principals, action_hash triple bind, single-use, fail-closed
-- Single-host atomic via AdmitLock
-- Multi-host Redis Lua: docs/REDIS_LUA_DUAL_ADMIT.md · scripts/redis/dual_consume.lua
-  - validate-all-then-write-all · same-slot {request_id} keys · EVALSHA + NOSCRIPT once
-  - hash/PDP in app · effect after ok with idempotency key
-  - Do not product-claim multi-host until fixtures green
+- Single-host atomic via AdmitLock (lab fixtures)
+- Multi-host: agent_gov.redis_consume.RedisDualConsume + scripts/redis/dual_consume.lua
+- Claim HA only after Redis fixtures green
+- Gold spine: docs/GOLD_STANDARD.md · docs/BEST_OF_INTEGRATED.md · scripts/check_gold_standard.py · make gold
 - Website serves the pin — does not admit
+- One-shot path: DualSession.run_and_apply / AdmitClient.admit_and_apply
+- Offline dual predicates: agent_gov.lua_simulator
+
+## U-DUAL + Redis
+- Pack: U-DUAL $20–35k/yr — never free with P-ADM or U-SOR
+- Atomic burn: docs/U_DUAL_REDIS_ATOMIC.md
+- Keys: ainav:req:{request_id}, ainav:tok:{request_id}:{token_id}
+- Script: validate-all-then-write-all; {ok}|{err}; NOSCRIPT → LOAD once
+- Cursor rule: .cursor/rules/redis-lua-dual-admit.mdc
 
 ## Commercial
 - Land: FIRST_OFFER L1 $28/35/40k fixtures-first
 - Attach: P-ADM $40–60k/yr within ~90 days of green L1
-- No fail-open discounts; no inventory SKUs
+- Script: docs/P_ADM_ATTACH_SCRIPT.md · playbook: docs/P_ADM_ATTACH_PLAYBOOK.md
+- Ops three: docs/COMMERCIAL_OPS_THREE.md
+  - Availability/ACL: docs/COMMERCIAL_AVAILABILITY_AND_ENTITLEMENT.md
+  - Sales/purchase: docs/SALES_PURCHASE_PROCESS.md
+  - Implementation/upsells: docs/IMPLEMENTATION_AND_UPSELL_INTEGRATION.md
+- No fail-open discounts; no inventory SKUs; no free U-DUAL
 
 ## Success equation
-SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER
+SUCCESS = LIVE_PIN_OK × proof day × signed L1 FIRST_OFFER × P-ADM attach
+
+## Azure pin edge (ops)
+- Health: /healthz.json (probe) + /health.json (LIVE_PIN_OK digest)
+- Check: python3 scripts/check_azure_swa_health.py --local|--public --require-live
+- Catalog: mothership/azure/README.md
+- FD probe 30s on /healthz.json; alerts on OriginHealthPercentage + OriginLatency
+- LAW: configure-log-analytics-diagnostics.sh; KQL summary/fast only by default
+- Cursor rule: .cursor/rules/azure-pin-edge.mdc
+
+# Must-have offering: docs/MUST_HAVE_OFFERING.md · docs/OFFERING.md · L1 then P-ADM only
