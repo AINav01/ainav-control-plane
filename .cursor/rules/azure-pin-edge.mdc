@@ -1,0 +1,55 @@
+---
+description: AINav Azure pin edge — SWA health, Front Door probes, LAW, KQL, alerts
+globs:
+  - mothership/www/**
+  - mothership/azure/**
+  - scripts/check_azure_swa_health.py
+  - scripts/Verify-Pin.ps1
+  - scripts/Deploy-AzurePin.ps1
+  - docs/AZURE*.md
+  - docs/PIN_GO.md
+  - .github/workflows/azure-static-web-apps.yml
+alwaysApply: false
+---
+
+# Azure pin edge (AINav.Institute)
+
+## Scope
+- Public static edge only. **Does not admit.** No dual tokens, no SoR writes here.
+- LIVE_PIN_OK: `https://ainav.institute/health.json` is JSON with `policy_digest` (not Squarespace/HTML).
+
+## Endpoints (mothership/www)
+- `/healthz.json` — LB/FD probe: `{status:ok, admit:false}`
+- `/health.json` — pin integrity (release_id, policy_digest)
+- Keep pin paths in `staticwebapp.config.json` routes + `navigationFallback.exclude` with `Cache-Control: no-store`.
+
+## Deploy & verify
+```bash
+python3 scripts/check_azure_swa_health.py --local --strict
+bash mothership/azure/deploy-swa.sh
+python3 scripts/check_azure_swa_health.py --url https://<swa-host> --strict
+python3 scripts/check_azure_swa_health.py --public --require-live
+```
+
+## Front Door
+- Probe path: **`/healthz.json`** @ **30s** balanced (15 aggressive / 60 conservative).
+- WAF **AllowPinJson** must include `/healthz.json` and `/health.json`.
+- Alerts: OriginHealthPercentage < 100%; OriginLatency > baseline (default 2000ms).
+- Scripts: `configure-front-door-probe.sh`, `configure-front-door-alerts.sh`.
+
+## Log Analytics / KQL
+- Wire diagnostics: `configure-log-analytics-diagnostics.sh`
+- Default KQL: `front-door-probe-latency-summary.kql`, `waf-pin-hits.fast.kql`
+- Selectivity order: time → Category == → path has_any → project → summarize → take
+- Prefer metric alerts for health; KQL for path detail. No dual-schema on hot path.
+
+## Index
+- `mothership/azure/README.md` — full catalog
+- `docs/AZURE_SWA_HEALTH_CHECKS.md` — health ops
+- `mothership/azure/LOG_ANALYTICS_INTEGRATION.md` — LAW wiring
+
+## Anti-patterns
+- Probing `/` or HTML (parking looks healthy)
+- SPA fallback rewriting `/health.json`
+- Claiming LIVE_PIN_OK while public returns HTML
+- Putting admit/policy engines on the static edge

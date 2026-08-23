@@ -1,0 +1,6 @@
+{
+  "status": "ok",
+  "service": "ainav-institute",
+  "probe": "healthz",
+  "admit": false
+}
