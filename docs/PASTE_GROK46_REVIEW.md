@@ -1,12 +1,28 @@
 # ONE PASTE — Cursor + Grok 4.6 (self-contained)
 
-**You:** `git pull && bash scripts/review_sandbox.sh` → need `RESULT: PASS`  
-**Cursor:** Open Folder on `ainav-control-plane` → **Grok 4.6** → new chat → paste **everything between BEGIN and END** (this block includes the full context; do not ask for other files).
+## Critical: which folder Cursor opens
+
+**WRONG:** Cursor “New Project” / empty initializer → review **must stop** (no fixtures).  
+**RIGHT:** Open Folder = clone of **ainav-control-plane** (has `scripts/review_sandbox.sh`, `agent-governance/`, `.cursorrules`).
+
+```bash
+git clone https://github.com/AINav01/ainav-control-plane.git
+cd ainav-control-plane
+git pull
+bash scripts/review_sandbox.sh    # must print RESULT: PASS
+```
+
+Then: **File → Open Folder → `ainav-control-plane`** (the folder that contains `scripts/` and `docs/`) → model **Grok 4.6** → new chat → paste between BEGIN and END → **also paste the sandbox terminal output**.
 
 **GitHub:** https://github.com/AINav01/ainav-control-plane/blob/main/docs/PASTE_GROK46_REVIEW.md
 
 --- BEGIN PASTE ---
-Deep review of AINav Control Plane. Prototype as of 2026-08-23. All context is IN this message. Do not claim you lack files; work from this brief + any terminal output the user pastes.
+Deep review of AINav Control Plane. Prototype as of 2026-08-23.
+
+**Workspace check (do this first):**
+- If this Cursor workspace has no `scripts/review_sandbox.sh`, no `agent-governance/`, and no `.cursorrules`, you are in the WRONG folder (empty New Project). Verdict: FAIL — wrong workspace. Tell the user: clone AINav01/ainav-control-plane, Open Folder on that root, re-run sandbox, re-paste.
+- If user pastes sandbox output containing `RESULT: PASS` and `GOLD PATH OK`, treat that as evidence even if local tools are limited.
+- All product context below is in this message. Do not refuse review only because you cannot open other docs—use this brief + pasted terminal output.
 
 ## Product (Job C only)
 AINav Control Plane: dual-admitted effect authority before privileged system-of-record writes.
@@ -20,34 +36,31 @@ AINav Control Plane: dual-admitted effect authority before privileged system-of-
 - Packs deepen same admit plane; no second control product
 - Success equation: LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
 
-## Build status (lab — proven offline)
-- agent_gov ~2.1.0: AdmitClient, DualSession, run_and_apply / admit_and_apply, effect gate, action map, redis_errors, RedisDualConsume, lua_simulator
-- dual_consume.lua: validate-all-then-write-all; same-slot keys req:{id} tok:{id}:…; {ok}|{err}
+## Build status (lab — proven offline when sandbox PASS)
+- agent_gov ~2.1.0: AdmitClient, DualSession, run_and_apply / admit_and_apply, effect gate, RedisDualConsume, lua_simulator
+- dual_consume.lua: validate-all-then-write-all; same-slot keys; {ok}|{err}
 - Gates: make gold / bash scripts/review_sandbox.sh → GOLD STANDARD ALL PASS + GOLD PATH OK
-- H9 concurrent offline: exactly one ok under parallel workers (simulator)
-- Live Redis H1–H12: required for PRODUCT multi-host HA claim; without REDIS_URL live tests skip → G3 = engineering ready NOT product HA
+- H9 concurrent offline: exactly one ok (simulator)
+- Live Redis H1–H12 required for PRODUCT multi-host HA; else G3 = engineering ready only
 
 ## OPEN gaps (do not mark closed)
-- G1/G10 LIVE_PIN_OK (Azure SWA + DNS) — ops
+- G1/G10 LIVE_PIN_OK — ops
 - G12 entity/bank — legal
-- G13 signed L1 / first revenue — commercial
-- G14 live SoR unlock — gated
-- Product HA — only after live Redis fixture matrix green
+- G13 signed L1 — commercial
+- G14 live SoR — gated
+- Product HA — only after live Redis fixtures green
 
 ## Must-not-change
-Job C only · dual distinct principals · action_hash · single-use · fail-closed · SoR only after ok · no free U-DUAL · no soft HITL as dual · no inventing SKUs · no LIVE_PIN_OK/HA/L1 claims without evidence
-
-## Evidence rule
-If user pastes `bash scripts/review_sandbox.sh` output, treat it as ground truth. If no output and you cannot run terminal, say so and review from this brief only (note limited evidence).
+Job C only · dual distinct principals · action_hash · single-use · fail-closed · SoR only after ok · no free U-DUAL · no soft HITL as dual · no inventing SKUs · no LIVE_PIN_OK/HA/L1 without evidence
 
 ## Deliver exactly
-1. Verdict — PASS | PASS WITH NOTES | FAIL
-2. Evidence — what you relied on
+1. Verdict — PASS | PASS WITH NOTES | FAIL (use FAIL only for wrong workspace or red sandbox; otherwise PASS WITH NOTES is normal without live pin)
+2. Evidence — workspace path check + sandbox lines user pasted
 3. Solid
 4. Thin / over-claimed
-5. Top 5 improvements (effort S/M/L; owner ops|eng|commercial)
+5. Top 5 improvements (S/M/L; ops|eng|commercial)
 6. Must-not-change (confirm)
 7. Next 7 days — ONE primary action only
 
-Be strict. Prefer this brief + fixtures over confidence.
+Be strict. Prefer this brief + pasted fixtures over confidence.
 --- END PASTE ---
