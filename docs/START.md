@@ -1,18 +1,9 @@
 # Start here
 
-## Wrong folder = review stops
+1. Clone: `git clone https://github.com/AINav01/ainav-control-plane.git && cd ainav-control-plane && git pull`
+2. `bash scripts/check_cursor_workspace.sh` → PASS
+3. `bash scripts/review_sandbox.sh` → PASS
+4. Cursor **File → Open Folder** → this repo (see **OPEN_IN_CURSOR.md** at repo root)
+5. Grok 4.6 → paste https://github.com/AINav01/ainav-control-plane/blob/main/docs/PASTE_GROK46_REVIEW.md + sandbox output
 
-Cursor must open the **ainav-control-plane** repo root (not “New Project”).
-
-```bash
-git clone https://github.com/AINav01/ainav-control-plane.git
-cd ainav-control-plane
-git pull
-bash scripts/review_sandbox.sh
-```
-
-**Open Folder** → select the `ainav-control-plane` directory that contains `scripts/` and `docs/`.
-
-**Deep review:** https://github.com/AINav01/ainav-control-plane/blob/main/docs/PASTE_GROK46_REVIEW.md  
-
-Copy BEGIN→END paste + paste sandbox output into Cursor **Grok 4.6**.
+Empty `/workspace` or New Project = wrong. Dual was not reviewed until the real folder is open.

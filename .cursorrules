@@ -1,3 +1,5 @@
+# CURSOR: File → Open Folder must be ainav-control-plane repo root (see OPEN_IN_CURSOR.md). Empty New Project = FAIL.
+
 # AINav Control Plane — Cursor rules
 # Start: docs/START.md · Master: docs/MASTER_AS_OF_2026-08-23.md
 
@@ -29,5 +31,6 @@ LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
 - G1/G10 pin · G12 legal · G13 signed L1 · G14 live SoR
 
 ## Deep review (Grok 4.6)
-- bash scripts/review_sandbox.sh first
-- Prompt: docs/CURSOR_DEEP_REVIEW_PROMPT.md
+- bash scripts/check_cursor_workspace.sh then bash scripts/review_sandbox.sh first
+- Prompt: docs/PASTE_GROK46_REVIEW.md
+- See OPEN_IN_CURSOR.md

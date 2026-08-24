@@ -1,0 +1,14 @@
+---
+description: Fail fast if Cursor opened empty New Project instead of ainav-control-plane
+globs:
+alwaysApply: true
+---
+
+# Workspace guard
+
+Before any dual-admit / Job C / prototype review:
+
+1. Confirm the workspace contains `scripts/review_sandbox.sh`, `agent-governance/`, and `.cursorrules`.
+2. If missing (e.g. path is empty `/workspace` or "New Project"): **stop**. Verdict **FAIL — wrong workspace**. Instruct: clone `AINav01/ainav-control-plane`, File → Open Folder on that repo root, run `bash scripts/check_cursor_workspace.sh` and `bash scripts/review_sandbox.sh`, re-paste.
+3. Do not invent fixtures or claim dual was reviewed without evidence.
+4. Prefer `docs/PASTE_GROK46_REVIEW.md` self-contained brief + user-pasted sandbox output.
