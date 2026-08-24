@@ -31,10 +31,10 @@ LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
 - G1/G10 pin · G12 legal · G13 signed L1 · G14 live SoR
 
 ## Stay on track
-Read docs/MASTER_AS_OF_2026-08-23.md first.
+Start: docs/START.md · Master: docs/MASTER_AS_OF_2026-08-23.md
 Next work: pin cutover OR L1 outreach — not more doctrine essays.
 
 ## Deep review (Grok 4.6)
-- Run `./scripts/review_sandbox.sh` or `make review` first
+- Run `bash scripts/review_sandbox.sh` or `make review` first
 - Prompt: docs/CURSOR_DEEP_REVIEW_PROMPT.md
-- Setup: docs/SETUP_GITHUB_CURSOR_REVIEW.md
+- Setup: docs/START.md
