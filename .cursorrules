@@ -33,3 +33,8 @@ LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
 ## Stay on track
 Read docs/MASTER_AS_OF_2026-08-23.md first.
 Next work: pin cutover OR L1 outreach — not more doctrine essays.
+
+## Deep review (Grok 4.6)
+- Run `./scripts/review_sandbox.sh` or `make review` first
+- Prompt: docs/CURSOR_DEEP_REVIEW_PROMPT.md
+- Setup: docs/SETUP_GITHUB_CURSOR_REVIEW.md

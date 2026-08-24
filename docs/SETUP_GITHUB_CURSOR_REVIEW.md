@@ -1,74 +1,59 @@
 # Setup: GitHub · Cursor · Grok 4.6 deep review
 
-**As of:** 2026-08-23  
-**Repo:** https://github.com/AINav01/ainav-control-plane
+**One path. No doctrine rewrite.**
 
 ---
 
-## 1. GitHub
+## A. Get `main`
 
 ```bash
 git clone https://github.com/AINav01/ainav-control-plane.git
 cd ainav-control-plane
-git pull origin main
+git pull
 ```
-
-Source of truth: `main` (code, `.cursorrules`, master spine, review brief).
 
 ---
 
-## 2. Local evidence (sandbox)
+## B. Prove the build (required)
 
 ```bash
 ./scripts/review_sandbox.sh
-# or: make gold && cd agent-governance && PYTHONPATH=. python3 examples/gold_path.py
+# same as: make review
 ```
 
-Expect: **GOLD STANDARD: ALL PASS** and **GOLD PATH OK**.
+**Must see:** `RESULT: PASS — gold + gold_path green`  
+If FAIL → stop; do not review.
 
 ---
 
-## 3. Cursor + Grok 4.6
+## C. Deep review in Cursor
 
-1. **File → Open Folder** → `ainav-control-plane`
-2. Select model **Grok 4.6**
-3. New chat — paste:
+1. **Open Folder** → `ainav-control-plane`
+2. Model → **Grok 4.6**
+3. New chat → open **`docs/CURSOR_DEEP_REVIEW_PROMPT.md`** → copy the prompt under the line → send
 
-```text
-Deep review of AINav Control Plane as of 2026-08-23.
-
-Follow .cursorrules, docs/MASTER_AS_OF_2026-08-23.md, docs/PROTOTYPE_REVIEW_GROK46.md.
-
-Run if needed: ./scripts/review_sandbox.sh
-(or make gold + agent-governance gold_path.py)
-
-Job C only. Dual fail-closed. Repo truth > assumptions.
-No invented SKUs. No LIVE_PIN_OK / product HA / signed L1 without evidence.
-
-Deliver:
-1. Verdict (PASS / PASS WITH NOTES / FAIL)
-2. What is solid
-3. What is over-claimed or thin
-4. Top 5 improvements (S/M/L)
-5. Must-not-change
-6. Next 7 days (ops / eng / commercial)
-```
+That file is the single review prompt (verdict format + hard rules).
 
 ---
 
-## 4. After review
+## D. After
 
-- Real bugs → branch → `make gold` → push/PR
-- Do not close G1 (pin) or G13 (L1) in git without evidence
-- Company next: pin live OR signed L1
+| Result | Action |
+|--------|--------|
+| Real defect | Fix → `./scripts/review_sandbox.sh` → commit/push |
+| Doc nit | Small doc PR only |
+| “Close pin/L1” | **Not** a git close — ops/commercial |
+
+**Company next:** LIVE_PIN_OK or signed L1 — not another review.
 
 ---
 
-## 5. Key paths
+## Files
 
-| Item | Path |
+| File | Role |
 |------|------|
-| Master spine | `docs/MASTER_AS_OF_2026-08-23.md` |
-| Review brief | `docs/PROTOTYPE_REVIEW_GROK46.md` |
-| Cursor rules | `.cursorrules` · `CURSOR.md` |
-| Sandbox script | `scripts/review_sandbox.sh` |
+| `scripts/review_sandbox.sh` | Gold + gold_path |
+| `docs/CURSOR_DEEP_REVIEW_PROMPT.md` | Paste into Grok 4.6 |
+| `docs/MASTER_AS_OF_2026-08-23.md` | Business + build spine |
+| `docs/PROTOTYPE_REVIEW_GROK46.md` | Longer brief |
+| `.cursorrules` | Always-on doctrine |
