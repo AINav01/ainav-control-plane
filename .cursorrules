@@ -1,5 +1,5 @@
 # AINav Control Plane — Cursor rules
-# Master: docs/MASTER_AS_OF_2026-08-23.md (2026-08-23 19:52 EDT)
+# Start: docs/START.md · Master: docs/MASTER_AS_OF_2026-08-23.md
 
 ## Identity
 - AINav, Inc. · Edge AINav.Institute · Product: Control Plane
@@ -15,14 +15,12 @@
 - Repo truth > chat memory · no invented SKUs
 
 ## Build
-- Lab: AdmitLock · gold_path · make gold PASS
+- Lab: AdmitLock · gold_path · make gold / review_sandbox PASS
 - Multi-host: RedisDualConsume + dual_consume.lua
 - HA claim only after REDIS_HA_FIXTURES (H1–H12) green
-- H9: tests/test_redis_ha_h9_concurrent.py (live needs REDIS_URL)
 
 ## Commercial bands
 - L1 $28–40k · P-ADM $40–60k/yr · U-DUAL $20–35k/yr
-- Attach: docs/P_ADM_ATTACH_SCRIPT.md
 
 ## Success
 LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
@@ -30,11 +28,6 @@ LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
 ## OPEN (do not fake-close)
 - G1/G10 pin · G12 legal · G13 signed L1 · G14 live SoR
 
-## Stay on track
-Start: docs/START.md · Master: docs/MASTER_AS_OF_2026-08-23.md
-Next work: pin cutover OR L1 outreach — not more doctrine essays.
-
 ## Deep review (Grok 4.6)
-- Run `bash scripts/review_sandbox.sh` or `make review` first
+- bash scripts/review_sandbox.sh first
 - Prompt: docs/CURSOR_DEEP_REVIEW_PROMPT.md
-- Setup: docs/START.md
