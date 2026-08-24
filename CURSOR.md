@@ -31,4 +31,6 @@ Next priorities: pin live OR signed L1 — not more doctrine.
 | Gaps | `docs/GAP_CLOSURE_REGISTER.md` |
 | Completion | `docs/COMPLETION_STATUS.md` |
 
+**Deep review setup:** `docs/SETUP_GITHUB_CURSOR_REVIEW.md` · `./scripts/review_sandbox.sh`
+
 **Repo:** https://github.com/AINav01/ainav-control-plane
