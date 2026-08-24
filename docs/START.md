@@ -4,11 +4,9 @@
 git pull && bash scripts/review_sandbox.sh
 ```
 
-**Deep review (one paste):** open [`docs/PASTE_GROK46_REVIEW.md`](PASTE_GROK46_REVIEW.md) → copy between BEGIN and END → Cursor → **Grok 4.6** → send.
+**Deep review:** one self-contained paste (no other files required):
 
-**Link:** https://github.com/AINav01/ainav-control-plane/blob/main/docs/PASTE_GROK46_REVIEW.md
+→ https://github.com/AINav01/ainav-control-plane/blob/main/docs/PASTE_GROK46_REVIEW.md  
 
-| Else | |
-|------|--|
-| Daily | `.cursorrules` + one goal |
-| Company | pin live or signed L1 |
+Copy between **BEGIN PASTE** and **END PASTE** → Cursor → **Grok 4.6** → send.  
+Paste sandbox output in the same chat if the model cannot run the terminal.
