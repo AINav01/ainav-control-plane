@@ -1,1 +1,7 @@
-PLACEHOLDER
+{
+  "service": "ainav-institute",
+  "governance": "job_c_only",
+  "fail_closed": true,
+  "dual_required_default": true,
+  "policy_digest": "sha256:ainav-admit-v1-2026-08-26"
+}

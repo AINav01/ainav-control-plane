@@ -1,1 +1,10 @@
-PLACEHOLDER
+{
+  "service": "ainav-institute",
+  "product": "AINav Control Plane",
+  "company": "AINav, Inc.",
+  "status": "pin_edge",
+  "channel": "azure-static-web-apps",
+  "policy_digest": "sha256:ainav-admit-v1-2026-08-26",
+  "admits": false,
+  "notes": "This edge publishes pin truth. It does not admit. Dual admission is the control plane."
+}

@@ -2,5 +2,6 @@
   "service": "ainav-institute",
   "status": "pin_edge",
   "channel": "azure-static-web-apps",
-  "notes": "Website serves the pin — does not admit. Dual admission is the control plane, not this static edge."
+  "site": "product_pages_shipped",
+  "notes": "Website serves the pin and product truth — does not admit. Dual admission is the control plane, not this static edge."
 }
