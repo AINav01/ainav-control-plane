@@ -20,6 +20,9 @@
 - Lab: AdmitLock · gold_path · make gold / review_sandbox PASS
 - Multi-host: RedisDualConsume + dual_consume.lua
 - HA claim only after REDIS_HA_FIXTURES (H1–H12) green
+- Plane MAJOR: tagged action_hash via propose()/hasher.py — see .cursor/rules/plane-major.mdc
+- Default hash_alg=sha256 · expire-not-convert · V1 digest frozen
+- Gate: cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py
 
 ## Commercial bands
 - L1 $28–40k · P-ADM $40–60k/yr · U-DUAL $20–35k/yr
