@@ -1,17 +1,14 @@
 ---
-description: Plane 2.3 MAJOR
+description: Plane 2.4 MAJOR
 alwaysApply: true
 ---
 
-# Plane 2.3
+# Plane 2.4
 
-- One hasher. Tagged digests only. Tickets from propose().
-- admit_ticket requires action, expires_at, policy_digest, request_id.
-- admit() requires ledger. ConsumeLedger(path) persists; still not U-DUAL.
-- Replay key is action_hash. New request_id does not reset.
-- halt_api → halt_engaged. Other True flags without a module → flag_not_implemented.
-- Allowlist: resource.id or params token/token_id/asset/instrument/coin/stablecoin.
+- 2.3 rules still apply (tagged hash, propose, required ticket fields, gates, persist ledger).
+- Dual seats: omit both → hold_pending_approval. One seat → incomplete. A==B → sod_denied. A≠B → dual_consumed_pending_effector.
+- EffectLedger is SoR idempotency, not an effector.
+- In-process ≠ U-DUAL Redis.
 - V1: sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10
-- Dual + fail-closed not waivable.
 
 cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py

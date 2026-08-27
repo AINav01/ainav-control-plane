@@ -1,4 +1,4 @@
-# ONE PASTE — Cursor + Grok 4.6 (plane 2.3)
+# ONE PASTE — Cursor + Grok 4.6 (plane 2.4)
 
 ## Folder
 
@@ -16,24 +16,22 @@ Need: `plane MAJOR tests passed`.
 Then: **File → Open Folder → ainav-control-plane** → **Grok 4.6** → new chat → paste BEGIN–END **and** the test output.
 
 --- BEGIN PASTE ---
-Deep review of AINav Control Plane 2.3 as of 2026-08-26. Job C only.
+Deep review of AINav Control Plane 2.4 as of 2026-08-26. Job C only.
 
 **Workspace check first:**
-- Need agent-governance/agent_gov/plane.py, gates.py, ledger.py, .cursorrules, .cursor/rules/plane-major.mdc. Else FAIL — wrong folder.
+- Need agent-governance/agent_gov/plane.py, seats.py, effector.py, gates.py, ledger.py, .cursorrules.
+- Else FAIL — wrong folder.
 - If the user pasted `plane MAJOR tests passed`, treat that as evidence.
 
 ## Product
-Dual-admitted effect authority before privileged SoR writes. Not Job A. Not Job B.
+Dual-admitted effect authority before privileged SoR writes.
 
-## Plane 2.3 on main (review this)
-- hasher — tagged only. V1: sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10
-- propose() runs gates first; immutable ticket + request_id + TTL
-- admit_ticket requires action, expires_at, policy_digest, request_id
-- halt_api → halt_engaged. Other True flags → flag_not_implemented
-- allowlist: resource.id or token/token_id/asset/instrument/coin/stablecoin
-- ConsumeLedger(path) atomic persist; replay by action_hash; not U-DUAL
-- extra= cannot overwrite request_id or hash fields
-- Default sha256 / v1 / sig_alg none / plane 2.3.0
+## Plane 2.4 on main (review this)
+- 2.3 hash/tickets/gates/persist ledger still apply
+- V1 locked: sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10
+- seats.require_dual: omit both = 2.3 hold; one seat = incomplete; A==B = sod_denied; A≠B = dual_consumed_pending_effector
+- EffectLedger: request_id:action_hash once. Not a BC client.
+- In-process only. Not Redis U-DUAL. Not LIVE_PIN_OK.
 
 ## OPEN
 LIVE_PIN_OK · signed L1 · live SoR · Redis dual HA
