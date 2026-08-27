@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import hmac
+import uuid
 from datetime import datetime, timedelta, timezone
 from types import MappingProxyType
 from typing import Any, Mapping
 
 from agent_gov.action import normalize_action
 from agent_gov.cutover import primary_hash, record_hashes, ticket_survives_flip
+from agent_gov.gates import enforce_gates
 from agent_gov.hasher import HasherError, consume_alg, verify_action
 from agent_gov.lockfile import default_lockfile
 
@@ -30,6 +32,7 @@ def propose(action: dict[str, Any], lockfile: dict[str, Any] | None = None, *, n
     ttl = int(lock.get("ticket_ttl_seconds") or 3600)
     expires = issued + timedelta(seconds=ttl)
     return MappingProxyType({
+        "request_id": str(uuid.uuid4()),
         "action_hash": tagged,
         "hash_alg": lock["hash_alg"],
         "canonical_ver": lock.get("canonical_ver") or "v1",
@@ -77,4 +80,5 @@ def admit_ticket(
         raise HasherError("policy_digest_mismatch", "lockfile moved")
     if not verify_action(normalize_action(action), str(tagged), canonical_ver=str(ticket.get("canonical_ver") or "v1")):
         raise HasherError("mutation_denied", "action does not match ticket")
+    enforce_gates(action, lockfile)
     return consume_alg(str(alg), str(tagged))

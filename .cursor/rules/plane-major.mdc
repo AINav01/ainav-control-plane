@@ -1,16 +1,16 @@
 ---
-description: SchemaVer 1 hash MAJOR / plane 2.2
+description: Plane 2.3 MAJOR
 alwaysApply: true
 ---
 
-# Plane MAJOR 2.2
+# Plane 2.3
 
-- One hasher: agent_gov.hasher. Packs do not hashlib Action bytes.
-- Tagged digests only. Tickets from propose() only. Immutable.
+- One hasher. Tagged digests only. Tickets from propose().
 - admit_ticket requires action, expires_at, policy_digest.
-- admit() requires ledger. Missing field = ticket_incomplete, not a skipped if.
-- Default sha256 / v1 / sig_alg none. Expire, do not convert.
-- ConsumeLedger is in-process, not U-DUAL / Redis.
+- admit() requires ledger.
+- halt_api → halt_engaged. Nonempty allowlist must match resource.id or token fields.
+- request_id is SoR idempotency hint, not part of action_hash.
+- ConsumeLedger ≠ U-DUAL.
 - V1: sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10
 - Dual + fail-closed not waivable.
 

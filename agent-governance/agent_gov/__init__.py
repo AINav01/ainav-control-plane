@@ -1,4 +1,4 @@
-"""AINav plane 2.2 — tagged hash, tickets, TTL, replay ledger."""
+"""AINav plane 2.3 — tagged hash, tickets, TTL, halt, allowlist."""
 
 from agent_gov.action import canonical_action_hash, normalize_action
 from agent_gov.hasher import HasherError, hash_action, verify_action
@@ -8,7 +8,7 @@ from agent_gov.plane import admit
 from agent_gov.propose import admit_ticket, propose
 from agent_gov.records import decision_record, validate_decision_record
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 __all__ = [
     "ConsumeLedger",
     "HasherError",
