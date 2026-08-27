@@ -1,0 +1,21 @@
+name: plane-major
+on:
+  push:
+    paths:
+      - "agent-governance/**"
+      - ".github/workflows/plane-major.yml"
+  pull_request:
+    paths:
+      - "agent-governance/**"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: agent-governance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: PYTHONPATH=. python3 tests/test_plane_major.py
