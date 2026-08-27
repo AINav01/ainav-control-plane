@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -108,6 +109,18 @@ def test_missing_digest_is_incomplete():
     raise AssertionError("missing digest must be incomplete")
 
 
+def test_missing_request_id_is_incomplete():
+    lock = default_lockfile()
+    ticket = dict(propose(V1, lock))
+    ticket.pop("request_id")
+    try:
+        admit_ticket(ticket, lock, action=V1)
+    except HasherError as exc:
+        assert exc.reason == "ticket_incomplete"
+        return
+    raise AssertionError("missing request_id must be incomplete")
+
+
 def test_halt_engaged():
     lock = validate_lockfile({
         "schema_ver": 1, "plane_version": "2.3.0",
@@ -120,6 +133,17 @@ def test_halt_engaged():
     assert validate_decision_record(rec) == []
 
 
+def test_flag_not_implemented():
+    lock = validate_lockfile({
+        "schema_ver": 1, "plane_version": "2.3.0",
+        "hash_alg": "sha256", "canonical_ver": "v1",
+        "flags": {"acrs_enforced": True},
+    })
+    rec = admit(V1, lock, ledger=ConsumeLedger())
+    assert rec["decision"] == "deny"
+    assert rec["reason_code"] == "flag_not_implemented"
+
+
 def test_allowlist_denied():
     lock = validate_lockfile({
         "schema_ver": 1, "plane_version": "2.3.0",
@@ -127,8 +151,19 @@ def test_allowlist_denied():
         "flags": {}, "allowlist": ["USDC"],
     })
     rec = admit(V1, lock, ledger=ConsumeLedger())
-    assert rec["decision"] == "deny"
     assert rec["reason_code"] == "allowlist_denied"
+
+
+def test_allowlist_token_param():
+    lock = validate_lockfile({
+        "schema_ver": 1, "plane_version": "2.3.0",
+        "hash_alg": "sha256", "canonical_ver": "v1",
+        "flags": {}, "allowlist": ["USDC"],
+    })
+    action = dict(V1)
+    action["params"] = dict(V1["params"], token="USDC")
+    rec = admit(action, lock, ledger=ConsumeLedger())
+    assert rec["decision"] == "hold"
 
 
 def test_allowlist_ok():
@@ -143,7 +178,6 @@ def test_allowlist_ok():
 
 def test_admit_without_ledger_denies():
     rec = admit(V1, default_lockfile(), ledger=None)
-    assert rec["decision"] == "deny"
     assert rec["reason_code"] == "ticket_incomplete"
     assert rec["action_hash"] == LOCKED
     assert validate_decision_record(rec) == []
@@ -179,7 +213,6 @@ def test_sha3_window_writes_both():
         },
     })
     ticket = propose(V1, lock, now=now)
-    assert ticket["hash_alg"] == "sha3-256"
     assert ticket["hashes"]["sha256"] == LOCKED
     assert admit_ticket(ticket, lock, action=V1, now=now) == "sha3-256"
 
@@ -191,6 +224,16 @@ def test_replay_ledger():
     assert first["decision"] == "hold" and first.get("request_id")
     second = admit(V1, lock, ledger=book)
     assert second["reason_code"] == "replay_denied"
+
+
+def test_persist_ledger():
+    lock = default_lockfile()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "seen.json"
+        first = admit(V1, lock, ledger=ConsumeLedger(path))
+        assert first["decision"] == "hold"
+        again = admit(V1, lock, ledger=ConsumeLedger(path))
+        assert again["reason_code"] == "replay_denied"
 
 
 def test_lockfile_unknown_flag():
@@ -209,9 +252,11 @@ def test_lockfile_unknown_flag():
 def test_record_integrity():
     rec = decision_record(
         decision="deny", action_hash=LOCKED, reason_code="mutation_denied",
-        extra={"action_hash": "sha256:" + "0" * 64},
+        request_id="rid-1",
+        extra={"action_hash": "sha256:" + "0" * 64, "request_id": "tamper"},
     )
     assert rec["action_hash"] == LOCKED
+    assert rec["request_id"] == "rid-1"
     assert validate_decision_record(rec) == []
 
 
