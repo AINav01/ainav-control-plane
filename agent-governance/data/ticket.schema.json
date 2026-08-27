@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AINav admit ticket SchemaVer 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action_hash", "hash_alg", "canonical_ver", "hashes", "policy_digest"],
+  "properties": {
+    "action_hash": {"type": "string", "pattern": "^(sha256|sha3-256):[0-9a-f]{64}$"},
+    "hash_alg": {"type": "string", "enum": ["sha256", "sha3-256"]},
+    "canonical_ver": {"type": "string", "const": "v1"},
+    "hashes": {"type": "object"},
+    "policy_digest": {"type": "string"},
+    "plane_version": {"type": ["string", "null"]},
+    "pack_id": {"type": ["string", "null"]},
+    "pack_version": {"type": ["string", "null"]}
+  }
+}

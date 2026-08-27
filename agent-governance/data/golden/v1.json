@@ -1,0 +1,21 @@
+{
+  "canonical_ver": "v1",
+  "hash_alg": "sha256",
+  "note": "Prefix is not part of the hashed bytes. V1 field set is frozen.",
+  "vectors": [
+    {
+      "id": "V1",
+      "expect": "sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10",
+      "action": {
+        "action_id": "act_demo_001",
+        "actor": {"actor_class": "payments_agent", "channel": "api", "agent_instance": "inst-9"},
+        "resource": {"type": "bank.payment", "id": "pay_1001", "env": "lab"},
+        "verb": "post",
+        "params": {"amount": 1000, "currency": "USD", "beneficiary": "acct_9"},
+        "context": {"channel": "agent"},
+        "evidence": {"pack_id": "ev_1"},
+        "rekor_uuid": "should-not-affect-hash"
+      }
+    }
+  ]
+}
