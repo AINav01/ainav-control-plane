@@ -58,10 +58,13 @@ def admit_ticket(
     exp = ticket.get("expires_at")
     ticket_digest = ticket.get("policy_digest")
     lock_digest = lockfile.get("policy_digest")
+    request_id = ticket.get("request_id")
     if not alg or not tagged:
         raise HasherError("ticket_incomplete", "hash_alg and action_hash required")
     if not exp:
         raise HasherError("ticket_incomplete", "expires_at required")
+    if not request_id:
+        raise HasherError("ticket_incomplete", "request_id required")
     if not ticket_digest or not lock_digest:
         raise HasherError("ticket_incomplete", "policy_digest required on ticket and lockfile")
     if action is None:

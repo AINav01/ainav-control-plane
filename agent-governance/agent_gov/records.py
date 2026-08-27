@@ -9,11 +9,12 @@ REASON_CODES = frozenset({
     "mutation_denied", "replay_denied", "policy_digest_mismatch",
     "cutover_ticket_voided", "hash_alg_mismatch", "untagged_digest",
     "ticket_expired", "ticket_incomplete",
-    "halt_engaged", "allowlist_denied",
+    "halt_engaged", "allowlist_denied", "flag_not_implemented",
     "executed_after_dual_admit", "hold_pending_approval",
     "policy_escalate_dual", "fail_closed_exception",
 })
 _HASH_RE = re.compile(r"^(sha256|sha3-256):[0-9a-f]{64}$")
+_PROTECTED = ("schema_version", "action_hash", "hash_alg", "canonical_ver", "hashes", "request_id")
 
 
 def decision_record(
@@ -42,7 +43,7 @@ def decision_record(
         "ts": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     if extra:
-        protected = {k: rec[k] for k in ("schema_version", "action_hash", "hash_alg", "canonical_ver", "hashes")}
+        protected = {k: rec[k] for k in _PROTECTED}
         rec.update(extra)
         rec.update(protected)
     return rec

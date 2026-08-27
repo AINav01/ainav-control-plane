@@ -13,7 +13,8 @@ from agent_gov.records import decision_record
 _DENY = {
     "mutation_denied", "replay_denied", "policy_digest_mismatch",
     "cutover_ticket_voided", "hash_alg_mismatch", "untagged_digest",
-    "ticket_expired", "ticket_incomplete", "halt_engaged", "allowlist_denied",
+    "ticket_expired", "ticket_incomplete", "halt_engaged",
+    "allowlist_denied", "flag_not_implemented",
 }
 
 
