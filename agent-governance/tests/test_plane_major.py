@@ -1,4 +1,4 @@
-"""SchemaVer 1 / plane 2.2 smoke."""
+"""SchemaVer 1 / plane 2.2 smoke — fail-closed admit."""
 from __future__ import annotations
 
 import sys
@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from agent_gov.action import normalize_action
-from agent_gov.hasher import HasherError, hash_action, parse_tagged
+from agent_gov.hasher import HasherError, hash_action, parse_tagged, policy_digest
 from agent_gov.ledger import ConsumeLedger
 from agent_gov.lockfile import default_lockfile, load_lockfile, validate_lockfile
 from agent_gov.plane import admit
@@ -50,7 +50,7 @@ def test_propose_admit():
     lock = default_lockfile()
     ticket = propose(V1, lock)
     assert ticket["action_hash"] == LOCKED
-    assert "expires_at" in ticket
+    assert ticket["expires_at"] and ticket["policy_digest"]
     assert admit_ticket(ticket, lock, action=V1) == "sha256"
     mutated = dict(V1)
     mutated["params"] = dict(V1["params"], amount=1001)
@@ -72,6 +72,45 @@ def test_ticket_expired():
         assert exc.reason == "ticket_expired"
         return
     raise AssertionError("expired ticket must deny")
+
+
+def test_missing_expires_is_incomplete():
+    lock = default_lockfile()
+    ticket = dict(propose(V1, lock))
+    ticket.pop("expires_at")
+    try:
+        admit_ticket(ticket, lock, action=V1)
+    except HasherError as exc:
+        assert exc.reason == "ticket_incomplete"
+        return
+    raise AssertionError("missing expires_at must be incomplete")
+
+
+def test_missing_digest_is_incomplete():
+    lock = default_lockfile()
+    ticket = dict(propose(V1, lock))
+    ticket.pop("policy_digest")
+    try:
+        admit_ticket(ticket, lock, action=V1)
+    except HasherError as exc:
+        assert exc.reason == "ticket_incomplete"
+        return
+    raise AssertionError("missing digest must be incomplete")
+
+
+def test_ttl_moves_digest():
+    a = validate_lockfile({
+        "schema_ver": 1, "plane_version": "2.2.0",
+        "hash_alg": "sha256", "canonical_ver": "v1",
+        "flags": {}, "ticket_ttl_seconds": 3600,
+    })
+    b = validate_lockfile({
+        "schema_ver": 1, "plane_version": "2.2.0",
+        "hash_alg": "sha256", "canonical_ver": "v1",
+        "flags": {}, "ticket_ttl_seconds": 60,
+    })
+    assert a["policy_digest"] != b["policy_digest"]
+    assert policy_digest(a) == a["policy_digest"]
 
 
 def test_replay_ledger():
@@ -108,9 +147,10 @@ def test_record_integrity():
 
 def test_example_json():
     path = ROOT / "data" / "lockfile.example.json"
-    if path.exists():
-        lf = load_lockfile(path)
-        assert lf["hash_alg"] == "sha256"
+    assert path.is_file(), "lockfile.example.json missing"
+    lf = load_lockfile(path)
+    assert lf["hash_alg"] == "sha256"
+    assert lf["ticket_ttl_seconds"] == 3600
 
 
 if __name__ == "__main__":

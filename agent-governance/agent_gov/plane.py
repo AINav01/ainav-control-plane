@@ -16,16 +16,17 @@ def admit(
     lockfile: dict[str, Any] | None = None,
     *,
     ticket: Mapping[str, Any] | None = None,
-    ledger: ConsumeLedger | None = None,
+    ledger: ConsumeLedger,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     lock = lockfile or default_lockfile()
     tkt = ticket or propose(action, lock, now=now)
     tagged = str(tkt.get("action_hash") or "")
     try:
+        if ledger is None:
+            raise HasherError("ticket_incomplete", "ledger required")
         admit_ticket(tkt, lock, action=action, now=now)
-        if ledger is not None:
-            ledger.consume(tagged)
+        ledger.consume(tagged)
         return decision_record(
             decision="hold",
             action_hash=tagged,
@@ -44,7 +45,7 @@ def admit(
         } else "fail_closed_exception"
         return decision_record(
             decision="deny",
-            action_hash=tagged or ("sha256:" + "0" * 64),
+            action_hash=tagged if tagged.startswith(("sha256:", "sha3-256:")) else "",
             reason_code=reason,
-            extra={"error": str(exc)},
+            extra={"error": exc.reason},
         )

@@ -1,11 +1,12 @@
 {
   "schema_ver": 1,
-  "plane_version": "1.0.0",
+  "plane_version": "2.2.0",
   "pack_id": "bc-finance",
   "pack_version": "1.0.0",
   "hash_alg": "sha256",
   "canonical_ver": "v1",
   "sig_alg": "none",
+  "ticket_ttl_seconds": 3600,
   "allowlist": [],
   "flags": {
     "acrs_enforced": false,

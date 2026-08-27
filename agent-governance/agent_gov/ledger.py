@@ -1,4 +1,7 @@
-"""In-process consume ledger. Replay of the same action_hash dies."""
+"""In-process consume ledger. Replay of the same action_hash dies.
+
+Not U-DUAL. Not multi-host. Production consume is Redis both-or-neither.
+"""
 from __future__ import annotations
 
 from agent_gov.hasher import HasherError

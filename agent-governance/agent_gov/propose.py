@@ -21,6 +21,8 @@ def _aware(now: datetime | None) -> datetime:
 
 def propose(action: dict[str, Any], lockfile: dict[str, Any] | None = None, *, now: datetime | None = None) -> Mapping[str, Any]:
     lock = lockfile or default_lockfile()
+    if not lock.get("policy_digest"):
+        raise HasherError("ticket_incomplete", "lockfile policy_digest required")
     normalized = normalize_action(action)
     hashes = record_hashes(normalized, lock, now=now)
     tagged = primary_hash(hashes, lock)
@@ -32,7 +34,7 @@ def propose(action: dict[str, Any], lockfile: dict[str, Any] | None = None, *, n
         "hash_alg": lock["hash_alg"],
         "canonical_ver": lock.get("canonical_ver") or "v1",
         "hashes": dict(hashes),
-        "policy_digest": lock.get("policy_digest"),
+        "policy_digest": lock["policy_digest"],
         "plane_version": lock.get("plane_version"),
         "pack_id": lock.get("pack_id"),
         "pack_version": lock.get("pack_version"),
@@ -45,30 +47,34 @@ def admit_ticket(
     ticket: Mapping[str, Any],
     lockfile: dict[str, Any],
     *,
-    action: dict[str, Any] | None = None,
+    action: dict[str, Any],
     now: datetime | None = None,
 ) -> str:
     alg = ticket.get("hash_alg")
     tagged = ticket.get("action_hash")
-    if not alg or not tagged:
-        raise HasherError("ticket_incomplete", "hash_alg and action_hash required")
     exp = ticket.get("expires_at")
-    if exp:
-        try:
-            deadline = datetime.fromisoformat(str(exp).replace("Z", "+00:00"))
-        except ValueError as exc:
-            raise HasherError("ticket_expired", "bad expires_at") from exc
-        if deadline.tzinfo is None:
-            deadline = deadline.replace(tzinfo=timezone.utc)
-        if _aware(now) >= deadline:
-            raise HasherError("ticket_expired", str(exp))
-    if not ticket_survives_flip(str(alg), lockfile):
-        raise HasherError("cutover_ticket_voided", str(alg))
     ticket_digest = ticket.get("policy_digest")
     lock_digest = lockfile.get("policy_digest")
-    if ticket_digest and lock_digest and not hmac.compare_digest(str(ticket_digest), str(lock_digest)):
+    if not alg or not tagged:
+        raise HasherError("ticket_incomplete", "hash_alg and action_hash required")
+    if not exp:
+        raise HasherError("ticket_incomplete", "expires_at required")
+    if not ticket_digest or not lock_digest:
+        raise HasherError("ticket_incomplete", "policy_digest required on ticket and lockfile")
+    if action is None:
+        raise HasherError("ticket_incomplete", "action required")
+    try:
+        deadline = datetime.fromisoformat(str(exp).replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise HasherError("ticket_incomplete", "bad expires_at") from exc
+    if deadline.tzinfo is None:
+        deadline = deadline.replace(tzinfo=timezone.utc)
+    if _aware(now) >= deadline:
+        raise HasherError("ticket_expired", str(exp))
+    if not ticket_survives_flip(str(alg), lockfile):
+        raise HasherError("cutover_ticket_voided", str(alg))
+    if not hmac.compare_digest(str(ticket_digest), str(lock_digest)):
         raise HasherError("policy_digest_mismatch", "lockfile moved")
-    if action is not None:
-        if not verify_action(normalize_action(action), str(tagged), canonical_ver=str(ticket.get("canonical_ver") or "v1")):
-            raise HasherError("mutation_denied", "action does not match ticket")
+    if not verify_action(normalize_action(action), str(tagged), canonical_ver=str(ticket.get("canonical_ver") or "v1")):
+        raise HasherError("mutation_denied", "action does not match ticket")
     return consume_alg(str(alg), str(tagged))

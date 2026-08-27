@@ -121,6 +121,7 @@ LOCKFILE_DIGEST_FIELDS = (
     "flags",
     "allowlist",
     "sig_alg",
+    "ticket_ttl_seconds",
 )
 
 
@@ -132,6 +133,7 @@ def policy_digest(lockfile: dict[str, Any], *, alg: str = DEFAULT_ALG) -> str:
     core.setdefault("flags", {})
     core.setdefault("allowlist", [])
     core.setdefault("sig_alg", "none")
+    core.setdefault("ticket_ttl_seconds", 3600)
     blob = b"ainav:v1:lockfile\n" + json.dumps(
         core, sort_keys=True, separators=(",", ":"), default=str
     ).encode("utf-8")
