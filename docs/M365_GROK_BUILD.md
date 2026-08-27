@@ -4,9 +4,10 @@
 **Audience:** AINav operators using Grok Build / Cursor Grok 4.6 on `AINav01/ainav-control-plane`  
 **Rule:** Grok and Cursor ship **code and documents**. They do **not** occupy a dual seat. Dynamics writes go through AINav admit.
 
-This file does **not** complete Entra consent. An admin must click Connect in the tenant.
+This file documents Entra consent. It does **not** click it for you.
 
-Official connector index: [docs.x.ai/grok/connectors](https://docs.x.ai/grok/connectors)
+Official connector index: [docs.x.ai/grok/connectors](https://docs.x.ai/grok/connectors)  
+Entra grant-consent: [Grant tenant-wide admin consent](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/grant-admin-consent)
 
 ---
 
@@ -69,6 +70,121 @@ xAI states it does not train on connector data and does not keep mailbox/calenda
 
 ---
 
+## 2.0 Entra admin consent (do this first for OneDrive / SharePoint)
+
+Tenant-wide admin consent lets every user in the tenant skip the “need admin approval” wall for **that app’s registered permissions**. It is **not** AINav dual-admit. Review scopes before you click Accept.
+
+### Roles that can grant it
+
+Any one of:
+
+- Cloud Application Administrator
+- Application Administrator
+- Privileged Role Administrator
+- Global Administrator
+
+Application permissions (app roles) that are Microsoft Graph **application** permissions usually need a Global Administrator to approve. SharePoint **write** (`Files.ReadWrite.All`) and `Sites.Selected` are in that class. Delegated Mail/Calendars/Teams can often be granted by Cloud Application Administrator.
+
+### Find the tenant ID
+
+1. Sign in at [https://entra.microsoft.com](https://entra.microsoft.com).
+2. **Entra ID** -> **Overview**.
+3. Copy **Tenant ID** (GUID). The verified domain (`contoso.onmicrosoft.com` or `contoso.com`) also works in consent URLs and in the xAI console.
+
+You will paste this into console.x.ai for OneDrive and SharePoint.
+
+### Path A -- xAI console (OneDrive and SharePoint)
+
+Required on Grok Business / Enterprise before members can connect those two.
+
+1. Sign in to [https://console.x.ai](https://console.x.ai) with Team Read-Write.
+2. Open **Grok Business** -> **Connectors** -> **Add Connector**.
+3. Pick **OneDrive** or **SharePoint**.
+4. Paste the Entra tenant ID.
+5. SharePoint only: choose **Delegated** (AINav default) or **Application `Sites.Selected`**.
+6. Consent options xAI shows:
+   - **Approve as admin** -- Microsoft popup. Sign in as an Entra admin above. Review permissions. **Accept**.
+   - **Copy link for your IT admin** -- send that URL. It is the same tenant-wide admin-consent endpoint.
+   - **Skip** -- finish later. Members will keep seeing admin-approval errors until you complete it.
+7. SharePoint write is a **second** app. After read consent: **Enable Write Access** -> another consent popup for `Files.ReadWrite.All`. Leave this **off** unless written.
+8. Application mode only: after consent, pick allowed sites in the console picker. Unlisted sites are not indexed.
+
+Do this once per connector (and once more for SharePoint write). Then each operator still clicks Connect with their own work account.
+
+### Path B -- Entra admin center (any Grok / SpaceXAI / Office add-in)
+
+Use this when a user hits **Need admin approval** on Outlook or Teams, or when the xAI popup is blocked.
+
+1. Have one user start Connect once so the service principal appears in the tenant. If it does not appear, use Path C.
+2. Sign in to [https://entra.microsoft.com](https://entra.microsoft.com) as Cloud Application Administrator or higher.
+3. **Entra ID** -> **Enterprise apps** -> **All applications**.
+4. Search **Grok**, **xAI**, **SpaceXAI**, or the exact name on the consent screen. SharePoint **write** may be a second enterprise app.
+5. Open the app -> **Security** -> **Permissions**.
+6. Review every Graph scope. Expected sets are in sections 2.1--2.5. If you see `Sites.Read.All` plus write you did not ask for, **do not** grant.
+7. **Grant admin consent for <your org>** -> **Accept**.
+8. Confirm the list shows **Granted by: An administrator**.
+
+Same grant also exists under **Entra ID** -> **App registrations** -> app -> **API permissions** -> **Grant admin consent**, but only for apps **your tenant registered**. Grok apps are usually **Enterprise applications** (Path B), not your own registration.
+
+### Path C -- admin-consent URL (when you have the client ID)
+
+Microsoft format:
+
+```text
+https://login.microsoftonline.com/{tenant}/adminconsent?client_id={client-id}
+```
+
+`{tenant}` = tenant GUID or verified domain. `{client-id}` = the app’s Application (client) ID from the consent screen or from Enterprise apps -> app -> Overview.
+
+Do **not** invent a Grok client ID. Prefer Path A’s **Copy link** -- that URL already has the correct ID. xAI may register **more than one** app (read vs write). Consent each ID separately.
+
+### Path D -- user request (“Approval required”)
+
+If the tenant disabled user consent:
+
+1. User clicks Connect -> **Approval required** -> justification -> **Request approval**.
+2. Reviewers: **Entra ID** -> **Enterprise apps** -> **Admin consent requests** (workflow must be on: Enterprise apps -> Consent and permissions -> Admin consent settings).
+3. A reviewer with a grant-capable role approves. Graph **application** permissions still need a Global Administrator.
+
+Enable the workflow only if you want users to queue requests instead of emailing IT. It can take up to an hour to turn on.
+
+### Verify
+
+```text
+Entra -> Enterprise apps -> [Grok app] -> Permissions
+  Admin consent tab lists the scopes in 2.1-2.5
+  Granted by: An administrator
+
+grok.com/connectors -> operator Connect succeeds without admin-approval error
+```
+
+Optional Graph check (admin):
+
+```http
+GET https://graph.microsoft.com/v1.0/servicePrincipals?$filter=startswith(displayName,'Grok')
+```
+
+Then inspect `oauth2PermissionGrants` / `appRoleAssignments` for that service principal.
+
+### Revoke
+
+- Operator: grok.com/connectors -> **Disconnect**, and [myapps.microsoft.com](https://myapps.microsoft.com).
+- Tenant: Entra -> Enterprise apps -> app -> Permissions -> **Admin consent** tab -> revoke. User-consent rows cannot be revoked in the portal UI; use Graph/PowerShell.
+- Removing the connector in console.x.ai deletes org-wide indexed data for OneDrive/SharePoint.
+
+### Assignment (optional harden)
+
+After tenant-wide consent, Enterprise apps -> app -> **Properties** -> **Assignment required = Yes**, then assign only the AINav operators (or the dedicated SharePoint reader account). Unassigned users cannot use the app even though the tenant consented.
+
+### What consent is not
+
+- Not a dual seat
+- Not LIVE_PIN_OK
+- Not permission to put BC MCP in this repo
+- Not “Grok may post a payment journal”
+
+---
+
 ### 2.1 Outlook Mail
 
 Docs: [Outlook connector](https://docs.x.ai/grok/connectors/outlook)
@@ -86,7 +202,7 @@ Mail and Calendar are **two connectors**, two OAuth grants.
 
 **Steps:** grok.com/connectors -> New Connector -> **Outlook** -> work account -> Accept.
 
-If “need admin approval”: Entra admin consents the xAI Grok app under **Enterprise applications**.
+If “need admin approval”: Path B or D in section 2.0.
 
 **AINav:** drafts and research only. `Mail.Send` from Grok is **not** an admit. Do not send customer or regulator mail from this connector.
 
@@ -131,11 +247,7 @@ Docs: [OneDrive connector](https://docs.x.ai/grok/connectors/onedrive)
 
 **Business / Enterprise only.** “Personal storage” means *your* OneDrive for Business, not a consumer Microsoft account.
 
-**Admin (once), console.x.ai -> Grok Business -> Connectors -> Add OneDrive:**
-
-1. Enter Entra tenant ID (GUID or `contoso.onmicrosoft.com`) from Entra **Overview**.
-2. Consent: Approve as admin, copy link for IT, or skip and finish later.
-3. Needs Team Read-Write on the xAI team.
+Complete **section 2.0 Path A** first.
 
 **Member:** grok.com/connectors -> OneDrive -> work account -> Accept.
 
@@ -155,30 +267,16 @@ Disconnect deletes indexed data for that user. Admin removal deletes org-wide in
 
 Docs: [SharePoint connector](https://docs.x.ai/grok/connectors/sharepoint)
 
-**Business / Enterprise only.**
-
-**Access modes**
-
-- **Delegated (default for AINav).** `Sites.Read.All` + `Files.Read.All` bounded by what the connecting account can see. Use a **dedicated Entra user** limited to AINav / engineering sites. Do not connect as Global Admin.
-- **Application `Sites.Selected`.** After consent, admin picks sites in the console. Sync indexes only those sites.
-
-**Admin**
-
-1. console.x.ai -> add SharePoint.
-2. Choose delegated (recommended) or Sites.Selected.
-3. Enter tenant ID.
-4. Admin consent (popup, copy link, or skip).
-5. If application mode: pick allowed sites (editable later).
-6. Write access is a **second** Entra app (`Files.ReadWrite.All`). Button **Enable Write Access**. Off by default. Members still opt in one by one.
+**Business / Enterprise only.** Complete **section 2.0 Path A** first (delegated + site-scoped account).
 
 **Read scopes:** `Sites.Read.All`, `Files.Read.All`, `User.Read`, `offline_access`.  
-**Write (if enabled):** `Files.ReadWrite.All`.
+**Write (if enabled):** `Files.ReadWrite.All` on a **second** enterprise app.
 
 Every query is access-checked as the asking user.
 
 **Can:** search documents across allowed sites; read library files; browse folders/drives; upload artifacts if write is on.
 
-**AINav:** keep write **off** unless you have a written reason. Application-wide site access is not the default for the plane workspace.
+**AINav:** keep write **off** unless you have a written reason.
 
 ---
 
@@ -273,7 +371,7 @@ Install from Microsoft Marketplace while signed into the **work** tenant. Admins
 
 Add-ins can use the **same** Grok connectors (SharePoint, Outlook, Drive). Use them for L1 eval reports, AE one-pagers, Sentinel workbooks.
 
-They do not hash tickets and they are not a dual seat.
+They do not hash tickets and they are not a dual seat. First user may also hit **Need admin approval** -- Path B in section 2.0.
 
 ---
 
@@ -288,7 +386,7 @@ Official Microsoft links:
 - **Azure MCP** -- same allowlist as Build
 - **Dataverse plugin** -- Marketplace; do **not** enable write in the plane folder
 
-Mail / OneDrive / SharePoint inside Cursor = extra Graph MCP + Entra app + admin consent. Prefer Grok connectors for that context. Keep Cursor MCP = GitHub + Azure only.
+Mail / OneDrive / SharePoint inside Cursor = extra Graph MCP + Entra app + admin consent (section 2.0 Path B on **that** app, not Grok’s). Prefer Grok connectors for that context. Keep Cursor MCP = GitHub + Azure only.
 
 ```text
 Cursor  File -> Open Folder = ainav-control-plane clone only
@@ -316,6 +414,7 @@ Human in Grok Build / Cursor
     -> Actions OIDC -> Azure (plane + pin)
 
 Grok connectors (Outlook / Teams / SharePoint / OneDrive)
+    -> Entra admin consent (2.0) then operator Connect
     -> context for specs and decks
     -> NOT a dual seat
 
@@ -335,12 +434,20 @@ E7 is the ICP **signal** (Copilot + Entra Suite + Agent 365). It is not a produc
 ## 7. Operator checklist
 
 ```text
+Entra (admin)
+  [ ] Tenant ID copied from Entra Overview
+  [ ] Cloud Application Admin (or higher) available
+  [ ] Path A: console.x.ai OneDrive + SharePoint provisioned
+  [ ] Path A/B: Grant admin consent; Permissions show Granted by administrator
+  [ ] SharePoint write app left off
+  [ ] Optional: Assignment required = Yes, operators only
+
 Grok account
   [ ] Same login for grok.com and grok CLI
   [ ] Outlook Mail + Outlook Calendar (two grants)
   [ ] Teams (engineering only)
-  [ ] OneDrive: Business/Enterprise + admin tenant ID + consent
-  [ ] SharePoint: delegated + site-scoped account; write off
+  [ ] OneDrive Connect succeeds (no admin-approval error)
+  [ ] SharePoint Connect as site-scoped account
   [ ] GitHub catalog: selected repos only
 
 Grok Build
@@ -359,7 +466,6 @@ Cursor
   [ ] Grok 4.6 review pack: docs/PASTE_GROK46_REVIEW.md
 
 Entra / E7 (customer or lab tenant)
-  [ ] Allow Grok / SpaceXAI publisher apps or your own Graph app
   [ ] PIM role "AINav Approver" != GitHub CODEOWNER (same human, different seat)
   [ ] Teams Premium licenses on the two controllers only
   [ ] Separate AINav card app for admit
@@ -369,7 +475,7 @@ Entra / E7 (customer or lab tenant)
 
 ## 8. What this file is not
 
-- Not Entra consent (you click that)
+- Not a substitute for the Accept click in Entra
 - Not LIVE_PIN_OK
 - Not U-DUAL Redis
 - Not a Grok / Cursor SKU
@@ -383,6 +489,11 @@ Cursor and Grok Build ship code. AINav admits the write.
 
 | What | URL |
 |------|-----|
+| Grant tenant-wide admin consent | https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/grant-admin-consent |
+| User vs admin consent | https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/user-admin-consent-overview |
+| Admin consent workflow | https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-admin-consent-workflow |
+| Review / revoke app permissions | https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/manage-application-permissions |
+| Entra admin center | https://entra.microsoft.com |
 | Connector index | https://docs.x.ai/grok/connectors |
 | grok.com connectors | https://grok.com/connectors |
 | Outlook Mail + Calendar | https://docs.x.ai/grok/connectors/outlook |
