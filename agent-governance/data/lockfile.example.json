@@ -1,0 +1,23 @@
+{
+  "schema_ver": 1,
+  "plane_version": "1.0.0",
+  "pack_id": "bc-finance",
+  "pack_version": "1.0.0",
+  "hash_alg": "sha256",
+  "canonical_ver": "v1",
+  "sig_alg": "none",
+  "allowlist": [],
+  "flags": {
+    "acrs_enforced": false,
+    "sentinel_export": false,
+    "halt_api": false,
+    "genius_watch": false,
+    "mica_emt_only": false,
+    "travel_rule": false
+  },
+  "cutover": {
+    "window_start": null,
+    "window_stop": null,
+    "write_algs": ["sha256"]
+  }
+}

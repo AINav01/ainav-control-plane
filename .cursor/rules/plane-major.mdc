@@ -1,0 +1,15 @@
+---
+description: SchemaVer 1 hash MAJOR
+alwaysApply: true
+---
+
+# Plane MAJOR
+
+- One hasher: agent_gov.hasher. Packs do not hashlib Action bytes.
+- Tagged digests only. Tickets from propose(). Immutable.
+- admit_ticket(..., action=) denies flip, digest move, mutate.
+- Default sha256 / v1 / sig_alg none. Expire, do not convert.
+- V1: sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10
+- Dual + fail-closed not waivable.
+
+cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py
