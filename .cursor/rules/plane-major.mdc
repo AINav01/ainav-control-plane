@@ -6,11 +6,11 @@ alwaysApply: true
 # Plane 2.3
 
 - One hasher. Tagged digests only. Tickets from propose().
-- admit_ticket requires action, expires_at, policy_digest.
-- admit() requires ledger.
-- halt_api → halt_engaged. Nonempty allowlist must match resource.id or token fields.
-- request_id is SoR idempotency hint, not part of action_hash.
-- ConsumeLedger ≠ U-DUAL.
+- admit_ticket requires action, expires_at, policy_digest, request_id.
+- admit() requires ledger. ConsumeLedger(path) persists; still not U-DUAL.
+- Replay key is action_hash. New request_id does not reset.
+- halt_api → halt_engaged. Other True flags without a module → flag_not_implemented.
+- Allowlist: resource.id or params token/token_id/asset/instrument/coin/stablecoin.
 - V1: sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10
 - Dual + fail-closed not waivable.
 

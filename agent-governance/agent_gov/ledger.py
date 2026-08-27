@@ -1,11 +1,13 @@
 """Consume ledger keyed by action_hash (not request_id).
 
 Same write cannot admit twice. New request_id does not reset replay.
-Optional path persists across process restart. Still not U-DUAL / Redis.
+Optional path persists across process restart (atomic replace).
+Still not U-DUAL / Redis.
 """
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from agent_gov.hasher import HasherError
@@ -27,9 +29,15 @@ class ConsumeLedger:
         if action_hash in self._seen:
             raise HasherError("replay_denied", action_hash)
         self._seen.add(action_hash)
-        if self._path:
-            self._path.parent.mkdir(parents=True, exist_ok=True)
-            self._path.write_text(json.dumps(sorted(self._seen)), encoding="utf-8")
+        self._flush()
 
     def seen(self, action_hash: str) -> bool:
         return action_hash in self._seen
+
+    def _flush(self) -> None:
+        if not self._path:
+            return
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = self._path.with_suffix(self._path.suffix + ".tmp")
+        tmp.write_text(json.dumps(sorted(self._seen)), encoding="utf-8")
+        os.replace(tmp, self._path)

@@ -25,6 +25,7 @@ def propose(action: dict[str, Any], lockfile: dict[str, Any] | None = None, *, n
     lock = lockfile or default_lockfile()
     if not lock.get("policy_digest"):
         raise HasherError("ticket_incomplete", "lockfile policy_digest required")
+    enforce_gates(action, lock)
     normalized = normalize_action(action)
     hashes = record_hashes(normalized, lock, now=now)
     tagged = primary_hash(hashes, lock)
