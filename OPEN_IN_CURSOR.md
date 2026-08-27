@@ -2,33 +2,32 @@
 
 **This directory is the project.** Do not use Cursor “New Project” or an empty `/workspace`.
 
-## 1. Clone (if needed)
+## 1. Clone
 
 ```bash
 git clone https://github.com/AINav01/ainav-control-plane.git
 cd ainav-control-plane
-git pull
+git pull origin main
 ```
 
-## 2. Prove fixtures
+## 2. Gate
 
 ```bash
-bash scripts/check_cursor_workspace.sh
-bash scripts/review_sandbox.sh
+cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py
 ```
 
-Both must PASS.
+Need: `plane MAJOR tests passed`.
 
 ## 3. Cursor
 
-**File → Open Folder** → select **`ainav-control-plane`** (the folder that contains this file, `scripts/`, `docs/`, `agent-governance/`).
+**File → Open Folder** → **`ainav-control-plane`**
 
 Model: **Grok 4.6**
 
-## 4. Deep review
+## 4. Review
 
-Paste from: https://github.com/AINav01/ainav-control-plane/blob/main/docs/PASTE_GROK46_REVIEW.md  
+1. [docs/GROK46_REVIEW_SETUP.md](docs/GROK46_REVIEW_SETUP.md)
+2. New chat → paste BEGIN–END from [docs/PASTE_GROK46_REVIEW.md](docs/PASTE_GROK46_REVIEW.md)
+3. Paste the test output in the same chat
 
-Include sandbox output in the same chat.
-
-If Cursor path is `/workspace` with no `scripts/review_sandbox.sh` → wrong folder; close and open this repo.
+Wrong folder = no `agent-governance/agent_gov/hasher.py`.
