@@ -1,61 +1,63 @@
-# ONE PASTE — Cursor + Grok 4.6 (self-contained)
+# ONE PASTE — Cursor + Grok 4.6
 
-## Critical: which folder Cursor opens
+## Folder
 
-**WRONG:** Cursor “New Project” / empty initializer → review **must stop** (no fixtures).  
-**RIGHT:** Open Folder = clone of **ainav-control-plane** (has `scripts/review_sandbox.sh`, `agent-governance/`, `.cursorrules`).
+**WRONG:** New Project / empty `/workspace`.
+**RIGHT:** Open Folder = clone of **ainav-control-plane** (has `.cursorrules`, `agent-governance/`, `.cursor/rules/plane-major.mdc`).
 
 ```bash
 git clone https://github.com/AINav01/ainav-control-plane.git
-cd ainav-control-plane
-git pull
-bash scripts/review_sandbox.sh    # must print RESULT: PASS
+cd ainav-control-plane && git pull
+cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py
 ```
 
-Then: **File → Open Folder → `ainav-control-plane`** (the folder that contains `scripts/` and `docs/`) → model **Grok 4.6** → new chat → paste between BEGIN and END → **also paste the sandbox terminal output**.
+Need: `plane MAJOR tests passed`.
 
-**GitHub:** https://github.com/AINav01/ainav-control-plane/blob/main/docs/PASTE_GROK46_REVIEW.md
+Then: **File → Open Folder → ainav-control-plane** → model **Grok 4.6** → new chat → paste BEGIN–END **and** the test output.
+
+Setup: `docs/GROK46_REVIEW_SETUP.md`
 
 --- BEGIN PASTE ---
-Deep review of AINav Control Plane. Prototype as of 2026-08-23.
+Deep review of AINav Control Plane as of 2026-08-26. Job C only.
 
-**Workspace check (do this first):**
-- If this Cursor workspace has no `scripts/review_sandbox.sh`, no `agent-governance/`, and no `.cursorrules`, you are in the WRONG folder (empty New Project). Verdict: FAIL — wrong workspace. Tell the user: clone AINav01/ainav-control-plane, Open Folder on that root, re-run sandbox, re-paste.
-- If user pastes sandbox output containing `RESULT: PASS` and `GOLD PATH OK`, treat that as evidence even if local tools are limited.
-- All product context below is in this message. Do not refuse review only because you cannot open other docs—use this brief + pasted terminal output.
+**Workspace check first:**
+- If this workspace has no `agent-governance/agent_gov/hasher.py`, no `.cursorrules`, no `.cursor/rules/plane-major.mdc` → FAIL — wrong folder. Tell the user to clone AINav01/ainav-control-plane and Open Folder on that root.
+- If the user pasted `plane MAJOR tests passed`, treat that as evidence.
 
-## Product (Job C only)
-AINav Control Plane: dual-admitted effect authority before privileged system-of-record writes.
-- NOT agent inventory (Job A). NOT IdP replacement (Job B).
-- Agent proposes Action → two distinct humans approve (roles + principals) → action_hash bound → single-use atomic consume → DecisionRecord → SoR apply ONLY if admit ok → fail-closed otherwise.
+## Product
+Dual-admitted effect authority before privileged SoR writes.
+Not inventory (Job A). Not IdP replacement (Job B).
+Agent proposes Action → two distinct humans → action_hash bound → single-use consume → DecisionRecord → SoR only if admit ok → fail-closed otherwise.
+
+## Plane MAJOR on main (review this)
+- One hasher: agent_gov.hasher. Tagged digests only (`sha256:<64 hex>`).
+- Tickets from propose() only. Immutable. admit_ticket(..., action=) denies flip, digest move, mutate.
+- Lockfile flags fail-closed. Unknown flags and half-open cutover windows deny.
+- Dual-write is a dated window on NEW rows. Expire leftover tickets. Do not re-hash history.
+- Default hash_alg=sha256, canonical_ver=v1, sig_alg=none.
+- V1 locked: sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10
+- Gate: cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py
+- CI: .github/workflows/plane-major.yml
 
 ## Commercial spine
-- L1 FIRST_OFFER $28–40k (2–4 weeks) prove with Acceptance Kit
-- P-ADM $40–60k/yr keep coverage (attach after kit PASS; never soft dual)
-- U-DUAL $20–35k/yr depth pack — NEVER free with P-ADM or U-SOR
-- Packs deepen same admit plane; no second control product
-- Success equation: LIVE_PIN_OK × proof day × signed L1 × P-ADM attach
+- L1 $28–40k prove with fixtures zip. Green eval ≠ production license.
+- P-ADM $40–60k/yr the plane.
+- U-DUAL $20–35k/yr never free with P-ADM or U-SOR.
+- Packs attach. No second control product. No invented SKUs.
 
-## Build status (lab — proven offline when sandbox PASS)
-- agent_gov ~2.1.0: AdmitClient, DualSession, run_and_apply / admit_and_apply, effect gate, RedisDualConsume, lua_simulator
-- dual_consume.lua: validate-all-then-write-all; same-slot keys; {ok}|{err}
-- Gates: make gold / bash scripts/review_sandbox.sh → GOLD STANDARD ALL PASS + GOLD PATH OK
-- H9 concurrent offline: exactly one ok (simulator)
-- Live Redis H1–H12 required for PRODUCT multi-host HA; else G3 = engineering ready only
-
-## OPEN gaps (do not mark closed)
-- G1/G10 LIVE_PIN_OK — ops
+## OPEN (do not fake-close)
+- G1/G10 LIVE_PIN_OK — ops (ainav.institute still parking until DNS cut)
 - G12 entity/bank — legal
 - G13 signed L1 — commercial
 - G14 live SoR — gated
-- Product HA — only after live Redis fixtures green
+- Product HA — only after live Redis H1–H12
 
 ## Must-not-change
-Job C only · dual distinct principals · action_hash · single-use · fail-closed · SoR only after ok · no free U-DUAL · no soft HITL as dual · no inventing SKUs · no LIVE_PIN_OK/HA/L1 without evidence
+Job C only · dual distinct principals · tagged action_hash · single-use · fail-closed · SoR only after ok · expire-not-convert · no soft HITL · no free U-DUAL · no LIVE_PIN_OK without curl evidence
 
 ## Deliver exactly
-1. Verdict — PASS | PASS WITH NOTES | FAIL (use FAIL only for wrong workspace or red sandbox; otherwise PASS WITH NOTES is normal without live pin)
-2. Evidence — workspace path check + sandbox lines user pasted
+1. Verdict — PASS | PASS WITH NOTES | FAIL (FAIL only for wrong workspace or red tests)
+2. Evidence — path check + pasted test lines
 3. Solid
 4. Thin / over-claimed
 5. Top 5 improvements (S/M/L; ops|eng|commercial)
