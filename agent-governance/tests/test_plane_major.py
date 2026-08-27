@@ -1,7 +1,8 @@
-"""SchemaVer 1 MAJOR smoke."""
+"""SchemaVer 1 / plane 2.2 smoke."""
 from __future__ import annotations
 
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,7 +11,9 @@ if str(ROOT) not in sys.path:
 
 from agent_gov.action import normalize_action
 from agent_gov.hasher import HasherError, hash_action, parse_tagged
+from agent_gov.ledger import ConsumeLedger
 from agent_gov.lockfile import default_lockfile, load_lockfile, validate_lockfile
+from agent_gov.plane import admit
 from agent_gov.propose import admit_ticket, propose
 from agent_gov.records import decision_record, validate_decision_record
 
@@ -47,6 +50,7 @@ def test_propose_admit():
     lock = default_lockfile()
     ticket = propose(V1, lock)
     assert ticket["action_hash"] == LOCKED
+    assert "expires_at" in ticket
     assert admit_ticket(ticket, lock, action=V1) == "sha256"
     mutated = dict(V1)
     mutated["params"] = dict(V1["params"], amount=1001)
@@ -56,6 +60,28 @@ def test_propose_admit():
         assert exc.reason == "mutation_denied"
         return
     raise AssertionError("mutate must deny")
+
+
+def test_ticket_expired():
+    lock = default_lockfile()
+    past = datetime.now(timezone.utc) - timedelta(hours=2)
+    ticket = propose(V1, lock, now=past)
+    try:
+        admit_ticket(ticket, lock, action=V1)
+    except HasherError as exc:
+        assert exc.reason == "ticket_expired"
+        return
+    raise AssertionError("expired ticket must deny")
+
+
+def test_replay_ledger():
+    lock = default_lockfile()
+    book = ConsumeLedger()
+    first = admit(V1, lock, ledger=book)
+    assert first["decision"] == "hold"
+    second = admit(V1, lock, ledger=book)
+    assert second["decision"] == "deny"
+    assert second["reason_code"] == "replay_denied"
 
 
 def test_lockfile_unknown_flag():

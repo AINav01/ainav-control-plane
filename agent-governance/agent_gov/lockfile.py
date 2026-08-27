@@ -23,6 +23,7 @@ FLAG_DEFAULTS = {
     "mica_emt_only": False,
     "travel_rule": False,
 }
+DEFAULT_TTL = 3600
 
 
 def _read(path: Path) -> dict[str, Any]:
@@ -64,6 +65,9 @@ def validate_lockfile(raw: dict[str, Any]) -> dict[str, Any]:
     for alg in write_algs:
         if alg not in SUPPORTED_ALGS:
             raise HasherError("unsupported_hash_alg", str(alg))
+    ttl = int(raw.get("ticket_ttl_seconds") or DEFAULT_TTL)
+    if ttl <= 0:
+        raise HasherError("lockfile_ttl", str(ttl))
     out = {
         "schema_ver": SCHEMA_VER,
         "plane_version": raw["plane_version"],
@@ -72,6 +76,7 @@ def validate_lockfile(raw: dict[str, Any]) -> dict[str, Any]:
         "hash_alg": raw["hash_alg"],
         "canonical_ver": raw.get("canonical_ver") or DEFAULT_CANONICAL,
         "sig_alg": raw.get("sig_alg") or "none",
+        "ticket_ttl_seconds": ttl,
         "allowlist": sorted(str(x) for x in (raw.get("allowlist") or [])),
         "flags": flags,
         "cutover": {
@@ -92,10 +97,11 @@ def default_lockfile() -> dict[str, Any]:
     return validate_lockfile(
         {
             "schema_ver": 1,
-            "plane_version": "1.0.0",
+            "plane_version": "2.2.0",
             "hash_alg": DEFAULT_ALG,
             "canonical_ver": DEFAULT_CANONICAL,
             "sig_alg": "none",
+            "ticket_ttl_seconds": DEFAULT_TTL,
             "allowlist": [],
             "flags": dict(FLAG_DEFAULTS),
             "cutover": {"window_start": None, "window_stop": None, "write_algs": [DEFAULT_ALG]},

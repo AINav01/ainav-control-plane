@@ -8,6 +8,7 @@ from typing import Any
 REASON_CODES = frozenset({
     "mutation_denied", "replay_denied", "policy_digest_mismatch",
     "cutover_ticket_voided", "hash_alg_mismatch", "untagged_digest",
+    "ticket_expired", "ticket_incomplete",
     "executed_after_dual_admit", "hold_pending_approval",
     "policy_escalate_dual", "fail_closed_exception",
 })
