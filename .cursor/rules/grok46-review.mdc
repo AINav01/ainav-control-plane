@@ -1,0 +1,15 @@
+---
+description: How to run a Grok 4.6 review in this repo
+alwaysApply: true
+---
+
+# Grok 4.6 review
+
+- Open Folder must be ainav-control-plane root.
+- Model: Grok 4.6.
+- Gate: `cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py`
+- Paste: docs/PASTE_GROK46_REVIEW.md between BEGIN and END.
+- Include terminal output in the same chat.
+- Job C only. Dual + fail-closed not waivable.
+- Tickets from propose() only. Tagged digests only.
+- Do not mark LIVE_PIN_OK, signed L1, or live SoR closed without evidence.
