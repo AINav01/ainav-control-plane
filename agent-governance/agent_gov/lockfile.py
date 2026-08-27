@@ -97,7 +97,7 @@ def default_lockfile() -> dict[str, Any]:
     return validate_lockfile(
         {
             "schema_ver": 1,
-            "plane_version": "2.2.0",
+            "plane_version": "2.3.0",
             "hash_alg": DEFAULT_ALG,
             "canonical_ver": DEFAULT_CANONICAL,
             "sig_alg": "none",

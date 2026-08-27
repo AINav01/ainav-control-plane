@@ -1,10 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "AINav admit ticket SchemaVer 1",
+  "title": "AINav admit ticket plane 2.3",
   "type": "object",
   "additionalProperties": false,
-  "required": ["action_hash", "hash_alg", "canonical_ver", "hashes", "policy_digest"],
+  "required": ["action_hash", "hash_alg", "canonical_ver", "hashes", "policy_digest", "issued_at", "expires_at", "request_id"],
   "properties": {
+    "request_id": {"type": "string"},
     "action_hash": {"type": "string", "pattern": "^(sha256|sha3-256):[0-9a-f]{64}$"},
     "hash_alg": {"type": "string", "enum": ["sha256", "sha3-256"]},
     "canonical_ver": {"type": "string", "const": "v1"},
@@ -12,6 +13,8 @@
     "policy_digest": {"type": "string"},
     "plane_version": {"type": ["string", "null"]},
     "pack_id": {"type": ["string", "null"]},
-    "pack_version": {"type": ["string", "null"]}
+    "pack_version": {"type": ["string", "null"]},
+    "issued_at": {"type": "string"},
+    "expires_at": {"type": "string"}
   }
 }
