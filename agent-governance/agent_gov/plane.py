@@ -1,4 +1,4 @@
-"""Plane 2.2 facade. Hash layer only — not Redis dual consume."""
+"""Plane 2.3 facade. Hash layer only — not Redis dual consume."""
 from __future__ import annotations
 
 from datetime import datetime
@@ -9,6 +9,12 @@ from agent_gov.ledger import ConsumeLedger
 from agent_gov.lockfile import default_lockfile
 from agent_gov.propose import admit_ticket, propose
 from agent_gov.records import decision_record
+
+_DENY = {
+    "mutation_denied", "replay_denied", "policy_digest_mismatch",
+    "cutover_ticket_voided", "hash_alg_mismatch", "untagged_digest",
+    "ticket_expired", "ticket_incomplete", "halt_engaged", "allowlist_denied",
+}
 
 
 def _tagged_or_hash(action: dict[str, Any], tagged: str) -> str:
@@ -27,33 +33,32 @@ def admit(
 ) -> dict[str, Any]:
     lock = lockfile or default_lockfile()
     tagged = ""
+    request_id = None
     try:
         if ledger is None:
             raise HasherError("ticket_incomplete", "ledger required")
         tkt = ticket or propose(action, lock, now=now)
         tagged = str(tkt.get("action_hash") or "")
+        request_id = tkt.get("request_id")
         admit_ticket(tkt, lock, action=action, now=now)
         ledger.consume(tagged)
-        rec = decision_record(
+        return decision_record(
             decision="hold",
             action_hash=_tagged_or_hash(action, tagged),
             reason_code="hold_pending_approval",
+            request_id=str(request_id) if request_id else None,
             extra={
                 "policy_digest": tkt.get("policy_digest"),
                 "hash_alg": tkt.get("hash_alg"),
                 "canonical_ver": tkt.get("canonical_ver"),
             },
         )
-        return rec
     except HasherError as exc:
-        reason = exc.reason if exc.reason in {
-            "mutation_denied", "replay_denied", "policy_digest_mismatch",
-            "cutover_ticket_voided", "hash_alg_mismatch", "untagged_digest",
-            "ticket_expired", "ticket_incomplete",
-        } else "fail_closed_exception"
+        reason = exc.reason if exc.reason in _DENY else "fail_closed_exception"
         return decision_record(
             decision="deny",
             action_hash=_tagged_or_hash(action, tagged),
             reason_code=reason,
+            request_id=str(request_id) if request_id else None,
             extra={"error": exc.reason},
         )
