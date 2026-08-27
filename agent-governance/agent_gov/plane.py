@@ -4,11 +4,17 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Mapping
 
-from agent_gov.hasher import HasherError
+from agent_gov.hasher import HasherError, hash_action
 from agent_gov.ledger import ConsumeLedger
 from agent_gov.lockfile import default_lockfile
 from agent_gov.propose import admit_ticket, propose
 from agent_gov.records import decision_record
+
+
+def _tagged_or_hash(action: dict[str, Any], tagged: str) -> str:
+    if tagged.startswith(("sha256:", "sha3-256:")):
+        return tagged
+    return hash_action(action)
 
 
 def admit(
@@ -16,20 +22,21 @@ def admit(
     lockfile: dict[str, Any] | None = None,
     *,
     ticket: Mapping[str, Any] | None = None,
-    ledger: ConsumeLedger,
+    ledger: ConsumeLedger | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     lock = lockfile or default_lockfile()
-    tkt = ticket or propose(action, lock, now=now)
-    tagged = str(tkt.get("action_hash") or "")
+    tagged = ""
     try:
         if ledger is None:
             raise HasherError("ticket_incomplete", "ledger required")
+        tkt = ticket or propose(action, lock, now=now)
+        tagged = str(tkt.get("action_hash") or "")
         admit_ticket(tkt, lock, action=action, now=now)
         ledger.consume(tagged)
-        return decision_record(
+        rec = decision_record(
             decision="hold",
-            action_hash=tagged,
+            action_hash=_tagged_or_hash(action, tagged),
             reason_code="hold_pending_approval",
             extra={
                 "policy_digest": tkt.get("policy_digest"),
@@ -37,6 +44,7 @@ def admit(
                 "canonical_ver": tkt.get("canonical_ver"),
             },
         )
+        return rec
     except HasherError as exc:
         reason = exc.reason if exc.reason in {
             "mutation_denied", "replay_denied", "policy_digest_mismatch",
@@ -45,7 +53,7 @@ def admit(
         } else "fail_closed_exception"
         return decision_record(
             decision="deny",
-            action_hash=tagged if tagged.startswith(("sha256:", "sha3-256:")) else "",
+            action_hash=_tagged_or_hash(action, tagged),
             reason_code=reason,
             extra={"error": exc.reason},
         )

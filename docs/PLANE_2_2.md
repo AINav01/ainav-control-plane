@@ -1,19 +1,20 @@
 # Plane 2.2
 
-Same Job C. Same V1 digest. New: ticket TTL, replay ledger, `admit()` → DecisionRecord.
+Same Job C. Same V1 digest. Tickets TTL-bound. Replay via in-process ledger. `admit()` → DecisionRecord.
 
 ```python
-from agent_gov.plane import admit
-from agent_gov.ledger import ConsumeLedger
-from agent_gov.lockfile import default_lockfile
+from agent_gov import admit, ConsumeLedger, default_lockfile, propose, admit_ticket
 
 lock = default_lockfile()
 book = ConsumeLedger()
-rec = admit(action, lock, ledger=book)   # hold_pending_approval
-again = admit(action, lock, ledger=book) # deny replay_denied if same ticket hash consumed
+ticket = propose(action, lock)
+admit_ticket(ticket, lock, action=action)  # action, expires_at, digest required
+rec = admit(action, lock, ledger=book)     # ledger required
 ```
+
+Missing action / expires_at / policy_digest / ledger → `ticket_incomplete`.
+Ledger is not U-DUAL.
 
 V1: `sha256:8d4a295b1dfb76f4169193012fdb7666fb199df66f45fe94c0bfe247648f4e10`
 
 Gate: `cd agent-governance && PYTHONPATH=. python3 tests/test_plane_major.py`
-Review: `docs/PASTE_GROK46_REVIEW.md` + Grok 4.6 in Cursor.
