@@ -14,7 +14,15 @@ REASON_CODES = frozenset({
 _HASH_RE = re.compile(r"^(sha256|sha3-256):[0-9a-f]{64}$")
 
 
-def decision_record(* , decision: str, action_hash: str, reason_code: str, request_id: str | None = None, extra: dict[str, Any] | None = None, **_kwargs: Any) -> dict[str, Any]:
+def decision_record(
+    *,
+    decision: str,
+    action_hash: str,
+    reason_code: str,
+    request_id: str | None = None,
+    extra: dict[str, Any] | None = None,
+    **_kwargs: Any,
+) -> dict[str, Any]:
     raw = str(action_hash)
     h = raw if raw.startswith(("sha256:", "sha3-256:")) else f"sha256:{raw}"
     hash_alg = "sha3-256" if h.startswith("sha3-256:") else "sha256"
@@ -39,7 +47,7 @@ def decision_record(* , decision: str, action_hash: str, reason_code: str, reque
 
 
 def validate_decision_record(rec: dict[str, Any]) -> list[str]:
-    errs = []
+    errs: list[str] = []
     for k in ("schema_version", "decision", "reason_code", "action_hash", "ts"):
         if k not in rec or rec[k] in (None, ""):
             errs.append(f"missing:{k}")
